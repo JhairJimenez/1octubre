@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Octubre, para ti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&display=swap" rel="stylesheet">
+<style>
+/* ===================== PALETA DE OCTUBRE ===================== */
+@property --sky-a { syntax: '<color>'; inherits: true; initial-value: #2A1B3D; }
+@property --sky-b { syntax: '<color>'; inherits: true; initial-value: #7A3B5E; }
+@property --sky-c { syntax: '<color>'; inherits: true; initial-value: #F0A04B; }
+@property --hill-far { syntax: '<color>'; inherits: true; initial-value: #5A2E4A; }
+@property --hill-near { syntax: '<color>'; inherits: true; initial-value: #3A1E33; }
+@property --canopy { syntax: '<color>'; inherits: true; initial-value: #C2412D; }
+
+:root {
+  --maple: #B8322A;
+  --gold: #F6C77B;
+  --parchment: #FBEBD6;
+  --paper: #FBF1E1;
+  --ink: #3A2027;
+  --plum: #170D22;
+  --px: 0; --py: 0;
+  --serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --hand: 'Caveat', 'Segoe Print', cursive;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  overflow: hidden;
+  background: var(--plum);
+  color: var(--parchment);
+  font-family: var(--serif);
+  -webkit-font-smoothing: antialiased;
+  transition: --sky-a 2.6s ease, --sky-b 2.6s ease, --sky-c 2.6s ease,
+              --hill-far 2.6s ease, --hill-near 2.6s ease, --canopy 2.6s ease;
+}
+
+/* Colores del cielo y colinas por escena */
+body[data-scene="gate"], body[data-scene="intro"], body[data-scene="dusk"], body[data-scene="finale"] {
+  --sky-a: #2A1B3D; --sky-b: #7A3B5E; --sky-c: #F0A04B; --hill-far: #5A2E4A; --hill-near: #3A1E33; --canopy: #C2412D; }
+body[data-scene="view"]    { --sky-a: #3B2142; --sky-b: #A1475A; --sky-c: #F6C177; --hill-far: #6B3350; --hill-near: #42203A; --canopy: #D9622B; }
+body[data-scene="october"] { --sky-a: #4A2A1E; --sky-b: #A8472A; --sky-c: #F3C47A; --hill-far: #6E3424; --hill-near: #47211C; --canopy: #E07A2E; }
+body[data-scene="fall"]    { --sky-a: #5B2A2E; --sky-b: #C2532B; --sky-c: #F2B35A; --hill-far: #7A3324; --hill-near: #4E1F1E; --canopy: #E8A23A; }
+body[data-scene="stars"]   { --sky-a: #0E0C2A; --sky-b: #241E4A; --sky-c: #4E3460; --hill-far: #221A3A; --hill-near: #150F26; --canopy: #6E2A3A; }
+body[data-scene="girl"]    { --sky-a: #2C1838; --sky-b: #8E3D5C; --sky-c: #E98A6B; --hill-far: #4F2742; --hill-near: #2F1830; --canopy: #B8322A; }
+body[data-scene="world"]   { --sky-a: #0B1030; --sky-b: #1E2150; --sky-c: #3F2D5E; --hill-far: #1E1838; --hill-near: #120D22; --canopy: #5A2436; }
+
+/* ===================== CIELO ===================== */
+.sky { position: fixed; inset: 0; z-index: 0;
+  background: linear-gradient(to bottom, var(--sky-a) 0%, var(--sky-b) 58%, var(--sky-c) 100%); }
+.sun, .moon { position: fixed; border-radius: 50%; pointer-events: none; z-index: 1;
+  transition: transform 3s cubic-bezier(.5,0,.2,1), opacity 2.4s ease; }
+.sun { width: 34vmin; height: 34vmin; left: 52%; bottom: 20vh;
+  background: radial-gradient(circle, #FFE3A6 0 30%, rgba(255,196,120,.55) 34%, rgba(255,160,90,0) 70%);
+  transform: translate(calc(var(--px) * -6px), 0); }
+.moon { width: 12vmin; height: 12vmin; right: 13vw; top: 11vh; opacity: 0; transform: translateY(6vh); }
+.moon svg { display: block; width: 100%; overflow: visible; filter: drop-shadow(0 0 14px rgba(255,240,210,.55)) drop-shadow(0 0 40px rgba(255,230,190,.25)); }
+.clouds { position: fixed; inset: 0; z-index: 3; pointer-events: none; transition: opacity 2.4s ease; }
+.cloud { position: absolute; animation: drift 46s ease-in-out infinite alternate; }
+.cloud svg { display: block; width: 100%; }
+.cloud.c1 { top: 13vh; left: -4vw; width: clamp(160px, 30vw, 380px); }
+.cloud.c2 { top: 25vh; right: -3vw; width: clamp(120px, 22vw, 280px); animation-duration: 58s; animation-direction: alternate-reverse; opacity: .85; }
+.cloud.c3 { top: 6vh; left: 48vw; width: clamp(90px, 15vw, 200px); animation-duration: 38s; opacity: .7; }
+@keyframes drift { to { transform: translateX(7vw); } }
+body[data-scene="stars"] .clouds, body[data-scene="world"] .clouds { opacity: 0; }
+body[data-scene="girl"] .clouds { opacity: .55; }
+body[data-scene="stars"] .sun, body[data-scene="world"] .sun { transform: translateY(40vh); opacity: 0; }
+body[data-scene="girl"] .sun { transform: translateY(14vh); opacity: .6; }
+body[data-scene="stars"] .moon, body[data-scene="world"] .moon, body[data-scene="girl"] .moon { opacity: 1; transform: none; }
+
+canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+#skyCanvas { z-index: 2; }
+#fxCanvas { z-index: 7; }
+
+.constellation { position: fixed; z-index: 3; left: 50%; top: 5vh; width: min(74vw, 520px);
+  transform: translate(calc(-50% + var(--px) * 8px), calc(var(--py) * 6px)); pointer-events: none; overflow: visible; }
+.constellation polyline { fill: none; stroke: rgba(255,236,200,.7); stroke-width: .35;
+  stroke-dasharray: 1; stroke-dashoffset: 1; }
+.constellation circle { fill: #FFF3DA; opacity: 0; transform-box: fill-box; transform-origin: center; }
+body[data-scene="stars"] .constellation polyline { stroke-dashoffset: 0; transition: stroke-dashoffset 3.4s ease .8s; }
+body[data-scene="stars"] .constellation circle { opacity: 1; animation: twinkle 2.4s ease-in-out infinite;
+  transition: opacity .6s ease calc(var(--i) * 120ms + .4s); }
+@keyframes twinkle { 50% { transform: scale(.55); } }
+
+/* Deseo escrito por la estrella fugaz */
+.wish { position: fixed; z-index: 5; left: 50%; top: calc(8vh + min(74vw, 520px) * .62);
+  width: max-content; max-width: 88vw; transform: translateX(-50%); text-align: center; pointer-events: none;
+  font: 700 clamp(1.8rem, 6.6vw, 3.2rem)/1.1 var(--hand); color: #FFF1D6; text-wrap: balance;
+  text-shadow: 0 0 10px rgba(255,220,160,.8), 0 0 28px rgba(255,190,120,.45);
+  -webkit-mask-image: linear-gradient(90deg, #000 45%, transparent 55%); mask-image: linear-gradient(90deg, #000 45%, transparent 55%);
+  -webkit-mask-size: 220% 100%; mask-size: 220% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0; mask-position: 100% 0;
+  opacity: 0; transition: opacity 1.2s ease; }
+body[data-scene="stars"] .wish { opacity: 1; }
+.wish.done { animation: wishglow 3s ease-in-out infinite; }
+@keyframes wishglow { 50% { text-shadow: 0 0 16px rgba(255,230,180,.95), 0 0 42px rgba(255,190,120,.6); } }
+
+/* ===================== PAISAJE ===================== */
+.land { position: fixed; left: 0; right: 0; bottom: 0; height: 34vh; z-index: 4;
+  transition: transform 2.2s cubic-bezier(.6,0,.2,1); }
+.land svg.hill { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hill-far path { fill: var(--hill-far); }
+.hill-near path { fill: var(--hill-near); }
+.hill-far { transform: translateX(calc(var(--px) * -8px)) scaleX(1.03); }
+.hill-near { transform: translateX(calc(var(--px) * -16px)) scaleX(1.05); }
+body[data-scene="view"] .land, body[data-scene="october"] .land { transform: translateY(14%); }
+body[data-scene="girl"] .land { transform: translateY(32%); }
+body[data-scene="world"] .land { transform: translateY(115%); }
+
+.tree { position: absolute; right: 2%; bottom: 9vh; width: clamp(150px, 26vw, 300px);
+  transform-origin: 50% 100%; animation: sway 7s ease-in-out infinite; }
+body[data-scene="fall"] .tree { animation-duration: 2.6s; }
+.tree .canopy { fill: var(--canopy); }
+.tree svg { display: block; width: 100%; overflow: visible; }
+.tree .trunk { fill: var(--hill-near); filter: brightness(.8); }
+.tree .roots { stroke: var(--hill-near); filter: brightness(.8); }
+.swing { transform-box: view-box; transform-origin: 144px 140px; animation: swing 4.6s ease-in-out infinite; }
+@keyframes swing { 0%,100% { transform: rotate(4deg); } 50% { transform: rotate(-4deg); } }
+.pumpkin { position: absolute; }
+.pumpkin svg { display: block; width: 100%; }
+.pumpkin.p1 { left: 54%; bottom: 10vh; width: clamp(30px, 5vw, 58px); }
+.pumpkin.p2 { right: 25%; bottom: 9vh; width: clamp(24px, 3.8vw, 44px); }
+.lantern { position: absolute; left: 6%; bottom: 10vh; width: clamp(20px, 3.2vw, 36px); }
+.lantern svg { position: relative; display: block; width: 100%; }
+.lantern-glow { position: absolute; left: 50%; top: 52%; width: 520%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  border-radius: 50%; background: radial-gradient(circle, rgba(255,196,110,.55), rgba(255,170,80,0) 65%);
+  opacity: .45; transition: opacity 2s ease; animation: flicker 2.8s ease-in-out infinite; }
+body[data-scene="stars"] .lantern-glow, body[data-scene="dusk"] .lantern-glow, body[data-scene="finale"] .lantern-glow { opacity: 1; }
+@keyframes flicker { 0%,100% { transform: translate(-50%,-50%) scale(1); } 30% { transform: translate(-50%,-50%) scale(.93); } 60% { transform: translate(-50%,-50%) scale(1.05); } }
+.flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flame 1.3s ease-in-out infinite; }
+@keyframes flame { 50% { transform: scaleY(.82) skewX(4deg); } }
+@keyframes sway { 0%,100% { transform: rotate(-1deg); } 50% { transform: rotate(1.6deg); } }
+
+.girl-fig { position: absolute; left: 12%; bottom: 10vh; width: clamp(82px, 14vw, 140px); transform-origin: 50% 100%;
+  transition: opacity 1.2s ease, filter 2s ease; }
+.girl-fig svg { display: block; width: 100%; overflow: visible; }
+.coat { fill: #C98A2E; } .hair { fill: #3A2230; } .beret, .scarf { fill: var(--maple); }
+.head { transform-box: view-box; transform-origin: 70px 92px; transition: transform 2.2s cubic-bezier(.4,0,.2,1); }
+.scarf-tail { transform-box: view-box; transform-origin: 90px 106px; animation: tail 3.2s ease-in-out infinite; }
+body[data-scene="fall"] .scarf-tail { animation-duration: 1.1s; }
+@keyframes tail { 50% { transform: rotate(-14deg) skewY(4deg); } }
+body[data-scene="stars"] .head { transform: rotate(-14deg); }
+.hair-sway { transform-box: view-box; transform-origin: 70px 70px; animation: hairsway 5s ease-in-out infinite; }
+body[data-scene="fall"] .hair-sway { animation-duration: 1.6s; }
+@keyframes hairsway { 50% { transform: skewX(-2.5deg); } }
+body[data-scene="stars"] .girl-fig { filter: brightness(.55) saturate(.8); }
+body[data-scene="view"] .girl-fig, body[data-scene="october"] .girl-fig, body[data-scene="girl"] .girl-fig { opacity: 0; }
+
+/* Ella salta al montón de hojas */
+.girl-fig.leap { animation: leap 4.4s cubic-bezier(.45,0,.35,1) forwards; }
+@keyframes leap {
+  0%   { transform: translate(0, 0) rotate(0) scale(1, 1); }
+  7%   { transform: translate(0, 3%) rotate(0) scale(1.05, .92); }
+  19%  { transform: translate(45%, -60%) rotate(9deg) scale(1, 1); }
+  29%  { transform: translate(90%, 6%) rotate(2deg) scale(1.06, .9); }
+  35%  { transform: translate(90%, 4%) rotate(0) scale(1, 1); }
+  68%  { transform: translate(90%, 4%) rotate(-2deg) scale(1, 1); }
+  72%  { transform: translate(88%, 6%) rotate(-2deg) scale(1.04, .93); }
+  83%  { transform: translate(42%, -42%) rotate(-7deg) scale(1, 1); }
+  94%  { transform: translate(0, 2%) rotate(0) scale(1.04, .95); }
+  100% { transform: translate(0, 0) rotate(0) scale(1, 1); }
+}
+.pile { position: absolute; left: calc(12% + clamp(82px, 14vw, 140px) * .8); bottom: 9vh; width: clamp(96px, 19vw, 210px);
+  transform-origin: 50% 100%; transition: filter 2s ease; }
+.pile svg { display: block; width: 100%; overflow: visible; }
+.pile.boom { animation: boom 2.6s cubic-bezier(.2,.8,.3,1); }
+@keyframes boom { 0% { transform: none; } 7% { transform: scale(1.22, .5); } 30% { transform: scale(1.12, .74); } 100% { transform: none; } }
+body[data-scene="stars"] .pile { filter: brightness(.55) saturate(.8); }
+
+.him { position: absolute; left: 70%; bottom: 19.5vh; width: clamp(18px, 2.8vw, 30px); opacity: 0;
+  transition: opacity 2s ease 1.2s; }
+.him svg { display: block; width: 100%; overflow: visible; }
+body[data-scene="stars"] .him { opacity: .9; }
+
+/* ===================== ESCENAS ===================== */
+.sc { position: fixed; inset: 0; z-index: 6; display: grid; place-items: center;
+  padding: calc(4vh + env(safe-area-inset-top, 0px)) 4vw calc(24vh + env(safe-area-inset-bottom, 0px));
+  opacity: 0; visibility: hidden; pointer-events: none; transform: scale(1.05);
+  transition: opacity 1.3s ease, transform 1.8s cubic-bezier(.22,.61,.36,1), visibility 0s linear 1.8s; }
+.sc.on { opacity: 1; visibility: visible; transform: none;
+  transition: opacity 1.4s ease .25s, transform 2s cubic-bezier(.22,.61,.36,1), visibility 0s; }
+.sc.leaving { transform: scale(.94) translateY(-2vh); }
+
+/* Intro: título tipo videoclip */
+.title { text-align: center; }
+.title h1 { margin: 0; font-style: italic; font-weight: 500; font-variation-settings: "opsz" 144;
+  font-size: clamp(3.2rem, 15vw, 8.6rem); line-height: .95; letter-spacing: -.02em; }
+.title .ch { display: inline-block; opacity: 0; will-change: transform, filter; }
+.intro-sub { width: min(88vw, 560px); margin: .5em auto 0; display: flex; justify-content: center; min-height: 3.2em; }
+.intro-sub svg.hw { filter: drop-shadow(0 0 8px rgba(255,200,130,.45)); }
+
+/* Visor de cámara */
+.vf { position: fixed; inset: calc(5vmin + env(safe-area-inset-top, 0px)) 5vmin calc(5vmin + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
+.vf i { position: absolute; width: 7vmin; height: 7vmin; border: 2px solid rgba(251,235,214,.85); }
+.vf i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.vf i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.vf i:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.vf i:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+.rec { position: absolute; top: 2.4vmin; left: 9vmin; display: flex; align-items: center; gap: .5em;
+  font: 600 .95rem var(--serif); }
+.rec::before { content: ""; width: .7em; height: .7em; border-radius: 50%; background: #E2453A; animation: blink 1.1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.stamp { position: absolute; right: 9vmin; bottom: 2.4vmin; font: 700 1.1rem "Courier New", monospace;
+  color: #FF9A3C; text-shadow: 0 0 6px rgba(255,140,40,.8); }
+.shot { position: relative; perspective: 900px; }
+
+/* Polaroid que se revela */
+.frame-wrap { position: relative; opacity: 0; transform: translateY(8vh) scale(.92);
+  transition: transform 1.6s cubic-bezier(.2,.9,.25,1), opacity 1s ease; }
+.sc-view.on .frame-wrap { opacity: 1; transform: rotateY(calc(var(--px) * 8deg)) rotateX(calc(var(--py) * -6deg)); }
+.halo { position: absolute; inset: -20% -34%; z-index: 0; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255,196,120,.4), rgba(255,160,90,.12) 55%, rgba(255,160,90,0));
+  animation: breathe 6s ease-in-out infinite; }
+.bokeh { position: absolute; inset: -14% -26%; z-index: 0; pointer-events: none; }
+.bokeh i { position: absolute; border-radius: 50%; opacity: .35;
+  background: radial-gradient(circle, rgba(255,218,160,.85), rgba(255,200,140,0) 70%);
+  animation: bokeh 7s ease-in-out infinite; }
+@keyframes bokeh { 50% { transform: translateY(-12px) scale(1.15); opacity: .9; } }
+.pol-stack { position: relative; z-index: 1; width: min(58vw, 250px, 34vh); aspect-ratio: 1 / 1.2; }
+.pol { position: absolute; inset: 0; margin: 0; padding: 7% 7% 0; border-radius: 3px; display: flex; flex-direction: column;
+  background: linear-gradient(165deg, #FFFDF8 0%, #F6EFE3 60%, #EDE3D3 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 30px 60px -18px rgba(20,6,20,.75), 0 6px 14px -6px rgba(20,6,20,.45);
+  opacity: 0; will-change: transform; }
+.pol::before { content: ""; position: absolute; z-index: 3; top: -12px; left: 50%; width: 38%; height: 24px; margin-left: -19%;
+  background: linear-gradient(90deg, rgba(246,199,123,.62), rgba(240,184,110,.5)); transform: rotate(-3deg);
+  box-shadow: 0 2px 4px rgba(60,20,10,.15); clip-path: polygon(3% 0, 97% 4%, 100% 50%, 96% 100%, 2% 96%, 0 50%); }
+.pol-img { position: relative; aspect-ratio: 1; overflow: hidden; background: #1C1A22; box-shadow: inset 0 0 0 1px rgba(0,0,0,.25); }
+.pol-img img.photo { filter: sepia(1) blur(14px) brightness(.25) contrast(.7) saturate(.4); }
+.pol-chem { position: absolute; inset: -10%; pointer-events: none;
+  background: radial-gradient(60% 50% at 30% 35%, rgba(58,78,86,.95), rgba(58,78,86,0) 70%),
+              radial-gradient(55% 60% at 75% 70%, rgba(48,40,62,.95), rgba(48,40,62,0) 70%),
+              linear-gradient(160deg, #2E3A44, #2A2232); }
+.pol-gloss { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(115deg, rgba(255,255,255,0) 30%, rgba(255,250,235,.32) 42%, rgba(255,255,255,0) 54%);
+  background-size: 260% 100%; background-position: 130% 0; }
+.pol-cap { flex: 1; display: grid; place-items: center; padding: 0 4%; color: var(--ink); }
+.flash { position: fixed; inset: 0; z-index: 7; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at 50% 45%, #FFFFFF, #FFF1DA 55%, #FFD9A8); }
+
+img.photo { display: block; width: 100%; height: 100%; object-fit: cover; }
+.pol-img img.photo, .arch img.photo { animation: kenburns 18s ease-in-out infinite alternate; }
+@keyframes kenburns { from { transform: scale(1.04); } to { transform: scale(1.16) translate(-2%, -2.5%); } }
+.sc-view.on .shot, .sc-girl.on .hero { animation: float 7s ease-in-out 2s infinite; }
+@keyframes float { 50% { transform: translateY(-10px); } }
+.sun { animation: glow 7s ease-in-out infinite; }
+.moon { animation: glow 5s ease-in-out infinite; }
+@keyframes glow { 50% { filter: brightness(1.15) saturate(1.1); } }
+
+/* Calendario 3D con hojas que se arrancan */
+.cal-wrap { perspective: 1100px; }
+.cal-swing { transform-origin: 50% 0; }
+.sc-october.on .cal-swing { animation: hang 6.5s ease-in-out 1.8s infinite; }
+@keyframes hang { 0%,100% { transform: rotate(0); } 30% { transform: rotate(1.4deg); } 70% { transform: rotate(-1.1deg); } }
+.cal { position: relative; width: min(84vw, 340px); background: var(--paper); color: var(--ink);
+  border-radius: 6px; padding: 30px 20px 22px;
+  box-shadow: 0 3px 0 -1px #EBDCC4, 0 6px 0 -2px #E0CDAF, 0 36px 70px -22px rgba(30,10,20,.7);
+  transform-origin: 50% 0; transform: rotateX(-100deg); opacity: 0;
+  transition: transform 1.8s cubic-bezier(.22,1.15,.36,1), opacity .5s ease; }
+.sc-october.on .cal { opacity: 1; transform: rotateX(0) rotateY(calc(var(--px) * 8deg)); }
+.cal::before, .cal::after { content: ""; position: absolute; z-index: 12; top: -9px; width: 12px; height: 24px; border-radius: 6px;
+  background: linear-gradient(90deg, #4E3428, #D8BFA2 45%, #7A5646); box-shadow: inset 0 -3px 0 rgba(0,0,0,.25), 0 2px 3px rgba(30,10,10,.3); }
+.cal::before { left: 28%; } .cal::after { right: 28%; }
+.cal h2 { margin: 0; font-weight: 600; font-variation-settings: "opsz" 144; font-size: clamp(2.2rem, 9vw, 3rem); line-height: 1;
+  letter-spacing: .14em; opacity: 0; filter: blur(6px);
+  transition: letter-spacing 2.2s cubic-bezier(.22,.61,.36,1) .1s, opacity 1.2s ease .1s, filter 1.4s ease .1s; }
+.cal.revealed h2 { letter-spacing: -.01em; opacity: 1; filter: none; }
+.cal .yr { margin: .15em 0 .8em; font-size: .95rem; opacity: 0; transition: opacity 1s ease .5s; }
+.cal.revealed .yr { opacity: .7; }
+.grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: 1.85em; gap: 3px 2px;
+  min-height: calc(7 * 1.85em + 18px); text-align: center; font-size: .95rem; }
+.grid span { display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+.grid .wd { font-weight: 600; opacity: .55; }
+.grid.oct span { opacity: 0; transform: translateY(8px) scale(.92);
+  transition: opacity .7s ease, transform .9s cubic-bezier(.22,.61,.36,1); transition-delay: calc(var(--i) * 22ms + .3s); }
+.cal.revealed .grid.oct span { opacity: 1; transform: none; }
+.cal.revealed .grid.oct span.wd { opacity: .55; }
+.cal-page { position: absolute; inset: 0; padding: 30px 20px 22px; border-radius: 6px;
+  background: linear-gradient(to bottom, var(--paper) 75%, #F2E2C8);
+  transform-origin: calc(50% - var(--dir, 1) * 44%) 0; box-shadow: 0 1px 2px rgba(60,30,20,.12); }
+.cal-page h3 { margin: 0; font-weight: 600; font-variation-settings: "opsz" 144; font-size: clamp(2.2rem, 9vw, 3rem); line-height: 1; letter-spacing: -.01em; }
+.cal-page .pg-yr { margin: .15em 0 .8em; font-size: .95rem; opacity: .7; }
+.grid span { position: relative; }
+.grid .st { position: absolute; left: 20%; top: 50%; width: 60%; height: 2px; margin-top: -1px; border-radius: 2px;
+  background: rgba(184,50,42,.62); pointer-events: none; }
+.grid .pre { opacity: .3; }
+.grid .start, .grid .today { color: var(--maple); font-weight: 700; z-index: 2; }
+.cal-ring { position: absolute; left: 50%; top: 50%; width: 2.3em; height: 1.85em; transform: translate(-50%, -50%) rotate(-8deg);
+  overflow: visible; pointer-events: none; }
+.cal-ring path { fill: none; stroke: var(--maple); stroke-width: 1.8; stroke-linecap: round; stroke-dasharray: 1 2; stroke-dashoffset: 1.01; }
+.pg-note { display: flex; justify-content: center; margin-top: .3em; min-height: 2.2em; }
+.together { display: flex; align-items: baseline; justify-content: center; gap: .45em; margin-top: .55em; min-height: 2.2em; opacity: 0; }
+.together .n { font-weight: 600; font-variation-settings: "opsz" 144; font-size: 2rem; line-height: 1; color: var(--maple);
+  font-variant-numeric: tabular-nums; }
+.together .t { font: 600 1.3rem/1.1 var(--hand); }
+.cal-stub { position: absolute; z-index: 11; top: 0; left: 0; right: 0; height: 14px; border-radius: 6px 6px 0 0;
+  background: #F1E3CB; opacity: 0; }
+.cal.ripped .cal-stub { opacity: 1; }
+/* Hoja que cae y se posa sobre el calendario */
+.cal-leaf { position: absolute; z-index: 13; top: -22px; right: 14px; width: 58px; pointer-events: none;
+  opacity: 0; transform: translate(-90px, -170px) rotate(-160deg);
+  transition: transform 3s cubic-bezier(.3,.7,.25,1) .9s, opacity .8s ease .9s; }
+.cal-leaf svg { display: block; width: 100%; filter: drop-shadow(0 6px 6px rgba(60,20,10,.25)); }
+.cal.revealed .cal-leaf { opacity: 1; transform: rotate(22deg); }
+.cal.revealed .cal-leaf svg { animation: rustle 4s ease-in-out 4s infinite; transform-origin: 50% 90%; }
+@keyframes rustle { 50% { transform: rotate(-7deg); } }
+
+/* Ella, la protagonista */
+.hero { position: relative; margin: 0; width: min(64vw, 290px); }
+.arch { position: relative; z-index: 2; aspect-ratio: 4 / 5; border-radius: 999px 999px 16px 16px; overflow: hidden;
+  border: 6px solid var(--parchment); box-shadow: 0 34px 70px -20px rgba(25,8,25,.7);
+  transform: translateY(5vh) scale(.86); opacity: 0;
+  transition: transform 1.5s cubic-bezier(.2,.9,.25,1), opacity 1s ease; }
+.sc-girl.on .arch { transform: rotateY(calc(var(--px) * 6deg)); opacity: 1; }
+.hero::before { content: ""; position: absolute; inset: -30%; z-index: 0; border-radius: 50%;
+  background: radial-gradient(circle, rgba(246,199,123,.45), rgba(246,199,123,0) 62%); animation: breathe 5s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: scale(1.08); opacity: .75; } }
+.hero figcaption { position: relative; z-index: 3; text-align: center; margin-top: .5em;
+  font: 700 clamp(1.5rem, 5vw, 2.1rem)/1 var(--hand); color: var(--gold); opacity: 0; transition: opacity 1s ease 1.4s; }
+.sc-girl.on .hero figcaption { opacity: 1; }
+.orbit { position: absolute; inset: 0; pointer-events: none; }
+.vine { position: absolute; z-index: 3; left: 0; top: 0; width: 100%; aspect-ratio: 4 / 5; overflow: visible; pointer-events: none; }
+.vine .stem { fill: none; stroke: #6B4A2A; stroke-width: 1.1; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.sc-girl.on .vine .stem { stroke-dashoffset: 0; transition: stroke-dashoffset 3.2s cubic-bezier(.45,0,.25,1) 1s; }
+.vine .vl { transform-box: fill-box; transform-origin: 50% 90%; transform: scale(0); transition: transform .9s cubic-bezier(.3,1.5,.5,1); }
+.sc-girl.on .vine .vl { transform: none; transition-delay: calc(var(--i) * 110ms + 1.4s); }
+.vine .berry { opacity: 0; transition: opacity .6s ease; }
+.sc-girl.on .vine .berry { opacity: 1; transition-delay: calc(var(--i) * 110ms + 1.8s); }
+.orb-item { position: absolute; left: 50%; top: 58%; width: 28px; will-change: transform; }
+.orb-item svg { display: block; width: 100%; }
+
+/* Su mundo */
+.world { position: relative; width: min(76vw, 380px); aspect-ratio: 1; transform: translateY(46vh) scale(.6);
+  transition: transform 2.2s cubic-bezier(.2,.9,.25,1); }
+.sc-world.on .world { transform: rotate(calc(var(--px) * 4deg)); }
+.planet { position: absolute; left: 15%; top: 15%; z-index: 2; width: 70%; height: 70%; overflow: visible;
+  filter: drop-shadow(0 0 40px rgba(240,160,75,.35)); }
+.continents { animation: spin-x 22s linear infinite; }
+@keyframes spin-x { to { transform: translateX(-200px); } }
+.ring, .world-deco { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.ring-back { z-index: 1; } .world-deco { z-index: 3; } .ring-front { z-index: 4; }
+.mini-girl { position: absolute; z-index: 3; left: 50%; bottom: 83%; width: 15%; transform: translateX(-50%); }
+.mini-girl svg { display: block; width: 100%; }
+.world .orb-item { top: 50%; width: 9%; }
+.world .orb-item.moon-photo { width: 21%; aspect-ratio: 1; border-radius: 50%; overflow: hidden;
+  border: 3px solid var(--parchment); box-shadow: 0 0 24px rgba(255,236,200,.5); }
+
+/* Carta final */
+.sc-finale { padding-bottom: 6vh; }
+.letter { position: relative; width: min(90vw, 520px); background: var(--paper); color: var(--ink); border-radius: 4px;
+  padding: clamp(22px, 6vw, 44px); box-shadow: 0 40px 80px -24px rgba(20,6,20,.75);
+  background-image: linear-gradient(to bottom, rgba(120,70,40,0) 33.1%, rgba(120,70,40,.07) 33.3%, rgba(120,70,40,0) 33.8%),
+                    linear-gradient(to bottom, rgba(120,70,40,0) 66.4%, rgba(120,70,40,.07) 66.6%, rgba(120,70,40,0) 67.1%);
+  background-attachment: local; opacity: 0;
+  max-height: 80vh; overflow-y: auto; overscroll-behavior: contain; pointer-events: auto; cursor: pointer; }
+.letter .hw-b { display: flex; margin: 0 0 .9em; }
+.letter .hw-t { justify-content: center; margin-bottom: 1.1em; }
+.letter .hw-s { justify-content: flex-end; margin: .4em 0 1em; }
+.letter .again-row { margin: 0; text-align: center; opacity: 0; }
+.letter .skip { margin: .6em 0 0; text-align: center; font: 500 1.15rem var(--hand); color: rgba(58,32,39,.55); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.nib { position: fixed; left: 0; top: 0; z-index: 9; width: 0; height: 0; pointer-events: none; opacity: 0; }
+.nib svg { position: absolute; display: block; overflow: visible; }
+.nib-pen svg { left: -2px; top: -40px; width: 34px; height: 42px; filter: drop-shadow(2px 4px 3px rgba(40,10,10,.35)); }
+.nib-glow svg { left: -14px; top: -14px; width: 28px; height: 28px; }
+.btn { font: 600 1rem var(--serif); color: var(--paper); background: var(--maple); border: 0; border-radius: 999px;
+  padding: .75em 1.4em; cursor: pointer; }
+.btn:focus-visible, .gate-leaf:focus-visible, .pp:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+
+/* Hoja gigante que cruza con el viento */
+.swoop { position: fixed; z-index: 7; left: 0; top: 0; width: min(38vw, 240px); pointer-events: none; opacity: 0; }
+.swoop svg { display: block; width: 100%; }
+.swoop.go { animation: swoop 4.4s cubic-bezier(.45,.05,.3,1) forwards; }
+@keyframes swoop {
+  0%   { opacity: 0; transform: perspective(800px) translate(-40vw, 4vh) rotateZ(-50deg) rotateY(0); }
+  15%  { opacity: 1; }
+  50%  { transform: perspective(800px) translate(40vw, 28vh) rotateZ(25deg) rotateY(190deg) scale(1.25); }
+  85%  { opacity: 1; }
+  100% { opacity: 0; transform: perspective(800px) translate(112vw, 62vh) rotateZ(95deg) rotateY(380deg) scale(.8); }
+}
+
+/* ===================== LETRA ===================== */
+.scrim { position: fixed; left: 0; right: 0; bottom: 0; height: 32vh; z-index: 7; pointer-events: none;
+  background: linear-gradient(to top, rgba(23,13,34,.7), rgba(23,13,34,0)); transition: opacity 1s; }
+.lyrics { position: fixed; z-index: 8; left: 50%; bottom: calc(6vh + env(safe-area-inset-bottom, 0px));
+  width: min(92vw, 820px); height: 3.2em; transform: translateX(-50%); text-align: center; pointer-events: none;
+  font-size: clamp(1.45rem, 4.4vw, 2.8rem); transition: opacity 1s; }
+.line { position: absolute; left: 0; right: 0; bottom: 0; margin: 0; font-style: italic; font-weight: 600;
+  line-height: 1.15; text-wrap: balance; filter: drop-shadow(0 2px 12px rgba(23,13,34,.6)); }
+.word { display: inline-block; padding: 0 .04em; translate: 0 calc(var(--lift, 0) * -1em); scale: calc(1 + var(--lift, 0) * .5); opacity: 0; transform: translateY(.45em); filter: blur(8px);
+  color: transparent; -webkit-background-clip: text; background-clip: text;
+  background-image: linear-gradient(90deg, var(--gold) calc(var(--p, 0) * 1% - 14%), rgba(251,235,214,.68) calc(var(--p, 0) * 1% + 6%));
+  transition: opacity .9s ease, transform 1.1s cubic-bezier(.22,.61,.36,1), filter 1s ease;
+  transition-delay: calc(var(--i) * 80ms); }
+.line.in .word { opacity: 1; transform: none; filter: none; }
+.line.out .word { opacity: 0; transform: translateY(-.6em); filter: blur(6px); transition-duration: .8s; transition-delay: calc(var(--i) * 35ms); }
+body[data-scene="finale"] .lyrics, body[data-scene="finale"] .scrim { opacity: 0; }
+
+/* ===================== CONTROLES ===================== */
+.progress { position: fixed; z-index: 9; top: 0; left: 0; right: 0; height: 3px; background: rgba(251,235,214,.12); opacity: 0; transition: opacity 1s; }
+.progress span { display: block; height: 100%; width: 0; background: var(--gold); }
+.pp { position: fixed; z-index: 9; top: calc(12px + env(safe-area-inset-top, 0px)); right: 14px; width: 42px; height: 42px; border-radius: 50%;
+  border: 1px solid rgba(251,235,214,.35); background: rgba(23,13,34,.35); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  color: var(--parchment); display: grid; place-items: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 1s; }
+.pp svg { width: 16px; height: 16px; fill: currentColor; }
+body.started .progress, body.started .pp { opacity: 1; pointer-events: auto; }
+
+/* Telón de inicio */
+.bar { position: fixed; left: 0; right: 0; height: 50.5vh; z-index: 10; background: var(--plum);
+  transition: transform 2s cubic-bezier(.75,0,.2,1); }
+.bar.top { top: 0; } .bar.bot { bottom: 0; }
+body.started .bar.top { transform: translateY(-100%); }
+body.started .bar.bot { transform: translateY(100%); }
+
+.gate { position: fixed; inset: 0; z-index: 11; display: grid; place-items: center; text-align: center; padding: 6vh 6vw;
+  transition: opacity .9s ease; }
+body.started .gate { opacity: 0; pointer-events: none; }
+.gate-leaf { background: none; border: 0; padding: 0; cursor: pointer; width: min(36vmin, 170px); border-radius: 50%;
+  animation: rock 4s ease-in-out infinite; }
+.gate-leaf svg { display: block; width: 100%; overflow: visible; filter: drop-shadow(0 14px 30px rgba(184,50,42,.45)); }
+.gate-leaf.fly { animation: fly 1.2s cubic-bezier(.5,0,.3,1) forwards; }
+@keyframes rock { 0%,100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg) translateY(-6px); } }
+@keyframes fly { to { transform: translate(30vw, -60vh) rotate(260deg) scale(.4); opacity: 0; } }
+.gate h1 { margin: .5em 0 .1em; font-style: italic; font-weight: 500; font-variation-settings: "opsz" 144; font-size: clamp(2.4rem, 9vw, 4.4rem); line-height: 1; }
+.gate .hint { margin: 0; font: 500 clamp(1.3rem, 4.4vw, 1.8rem) var(--hand); color: var(--gold); }
+.pick { margin: 1.6em auto 0; max-width: 34ch; font-size: .95rem; line-height: 1.5; color: rgba(251,235,214,.85); }
+.pick label { display: block; margin-top: .7em; font-weight: 600; }
+.pick input { display: block; margin: .3em auto 0; max-width: 100%; color: inherit; font: inherit; font-size: .85rem; }
+
+.leak { position: fixed; inset: -10% -30%; z-index: 7; pointer-events: none; opacity: 0; mix-blend-mode: screen;
+  background: radial-gradient(35% 60% at 35% 40%, rgba(255,176,96,.6), rgba(255,176,96,0) 70%),
+              radial-gradient(25% 45% at 62% 62%, rgba(255,96,64,.4), rgba(255,96,64,0) 70%); }
+.grain { position: fixed; inset: -50%; z-index: 12; pointer-events: none; opacity: .07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain .6s steps(3) infinite; }
+@keyframes grain { 33% { transform: translate(-3%, 2%); } 66% { transform: translate(2%, -3%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+  .grain, .swoop { display: none; }
+}
+</style>
+</head>
+<body data-scene="gate">
+
+<div class="sky"></div>
+<div class="sun"></div>
+<div class="moon" id="moon"></div>
+<div class="clouds" aria-hidden="true"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div></div>
+<canvas id="skyCanvas"></canvas>
+<svg class="constellation" viewBox="0 0 100 70" aria-hidden="true"><polyline pathLength="1" points=""/></svg>
+<div class="wish" id="wish" aria-hidden="true"></div>
+
+<!-- Paisaje -->
+<div class="land" aria-hidden="true">
+  <svg class="hill hill-far" viewBox="0 0 1000 300" preserveAspectRatio="none"><path d="M0 160 C180 90 340 120 480 140 C640 165 780 70 1000 110 L1000 300 L0 300 Z"/></svg>
+  <div class="him" id="him"></div>
+  <svg class="hill hill-near" viewBox="0 0 1000 300" preserveAspectRatio="none"><path d="M0 220 C200 170 360 200 520 215 C700 232 860 180 1000 200 L1000 300 L0 300 Z"/></svg>
+  <div class="tree" id="tree"></div>
+  <div class="lantern"><div class="lantern-glow"></div><div id="lantern"></div></div>
+  <div class="girl-fig" id="girlFig"></div>
+  <div class="pile" id="pile"></div>
+  <div class="pumpkin p1" id="pumpkin1"></div>
+  <div class="pumpkin p2" id="pumpkin2"></div>
+</div>
+
+<canvas id="fxCanvas"></canvas>
+
+<!-- Escenas (cambian solas según la letra) -->
+<section class="sc sc-intro" data-s="intro">
+  <div class="title"><h1 id="titleName"></h1><div class="intro-sub" id="introSub" role="img"></div></div>
+</section>
+
+<section class="sc sc-view" data-s="view">
+  <div class="vf" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="rec">REC</span><span class="stamp" id="stamp"></span></div>
+  <div class="shot">
+    <div class="frame-wrap">
+      <div class="halo" aria-hidden="true"></div>
+      <div class="bokeh" id="bokeh" aria-hidden="true"></div>
+      <div class="pol-stack">
+        <figure class="pol" id="polA"><div class="pol-img"><img class="photo" id="viewPhoto" alt="Ella"><div class="pol-chem"></div><div class="pol-gloss"></div></div><figcaption class="pol-cap"></figcaption></figure>
+        <figure class="pol" id="polB"><div class="pol-img"><img class="photo" id="viewPhoto2" alt="Ella"><div class="pol-chem"></div><div class="pol-gloss"></div></div><figcaption class="pol-cap"></figcaption></figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sc sc-october" data-s="october">
+  <div class="cal-wrap">
+    <div class="cal-swing"><div class="cal" id="cal">
+      <div class="cal-leaf" id="calLeaf"></div>
+      <div class="cal-stub" id="calStub"></div>
+      <h2 id="calTitle">Octubre</h2>
+      <div class="yr" id="calYear"></div>
+      <div class="grid oct" id="calGrid"></div>
+      <div class="together" id="together"><span class="n" id="daysN">0</span><span class="t" id="daysT"></span></div>
+    </div></div>
+  </div>
+</section>
+
+<section class="sc sc-girl" data-s="girl">
+  <figure class="hero">
+    <div class="arch"><img class="photo" id="girlPhoto" alt="Ella"></div>
+    <div class="orbit" id="girlOrbit"></div>
+    <figcaption>la protagonista de todo</figcaption>
+  </figure>
+</section>
+
+<section class="sc sc-world" data-s="world">
+  <div class="world" id="world">
+    <svg class="ring ring-back" id="ringBack" viewBox="0 0 200 200" aria-hidden="true"></svg>
+    <svg class="world-deco" id="worldDeco" viewBox="0 0 200 200" aria-hidden="true"></svg>
+    <div class="mini-girl" id="miniGirl"></div>
+    <svg class="planet" viewBox="0 0 200 200" aria-hidden="true">
+      <defs>
+        <radialGradient id="pg" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#F4B66A"/><stop offset=".55" stop-color="#C2532B"/><stop offset="1" stop-color="#4A1F35"/></radialGradient>
+        <radialGradient id="ps" cx="36%" cy="30%" r="80%"><stop offset=".45" stop-color="#1A0F24" stop-opacity="0"/><stop offset="1" stop-color="#1A0F24" stop-opacity=".8"/></radialGradient>
+        <clipPath id="pc"><circle cx="100" cy="100" r="96"/></clipPath>
+      </defs>
+      <circle cx="100" cy="100" r="96" fill="url(#pg)"/>
+      <g clip-path="url(#pc)"><g class="continents" id="continents"></g></g>
+      <circle cx="100" cy="100" r="96" fill="url(#ps)"/>
+      <circle cx="100" cy="100" r="99" fill="none" stroke="rgba(255,220,170,.35)" stroke-width="2"/>
+      <circle cx="100" cy="100" r="104" fill="none" stroke="rgba(255,200,140,.12)" stroke-width="8"/>
+      <path d="M38 66 Q54 32 94 22" stroke="rgba(255,240,215,.16)" stroke-width="9" stroke-linecap="round" fill="none"/>
+    </svg>
+    <svg class="ring ring-front" id="ringFront" viewBox="0 0 200 200" aria-hidden="true"></svg>
+    <div class="orbit" id="worldOrbit"></div>
+  </div>
+</section>
+
+<section class="sc sc-finale" data-s="finale">
+  <article class="letter" id="letter"></article>
+</section>
+
+<div class="swoop" id="swoop" aria-hidden="true"></div>
+<div class="flash" aria-hidden="true"></div>
+<div class="leak" aria-hidden="true"></div>
+<div class="nib nib-pen" id="nibPen" aria-hidden="true"></div>
+<div class="nib nib-glow" id="nibGlow" aria-hidden="true"></div>
+<div class="scrim"></div>
+<div class="lyrics" aria-live="polite"><p class="line"></p><p class="line"></p></div>
+
+<div class="progress"><span id="prog"></span></div>
+<button class="pp" id="pp" aria-label="Pausar"></button>
+
+<div class="bar top"></div><div class="bar bot"></div>
+
+<div class="gate" id="gate">
+  <div>
+    <button class="gate-leaf" id="startBtn" aria-label="Empezar"></button>
+    <h1 class="gate-name"></h1>
+    <p class="hint">toca la hoja para empezar</p>
+    <div class="pick" id="pick" hidden>
+      <p id="pickMsg"></p>
+      <label id="pickSong">Canción<input type="file" accept="audio/*" id="songFile"></label>
+      <label id="pickLrc">Letra (.lrc)<input type="file" id="lrcFile"></label>
+    </div>
+  </div>
+</div>
+
+<div class="grain"></div>
+<audio id="song" preload="auto"></audio>
+
+<!-- GSAP: motor de animación (si un CDN falla, carga el otro) -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<script>window.gsap || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"><\/script>');</script>
+<script>
+/* =========================================================
+   ✏️ CONFIGURA AQUÍ TU DETALLE
+   ========================================================= */
+const CONFIG = {
+  nombre: 'MY GIRL',
+  subtitulo: 'este octubre es para ti',
+  fotos: {
+    ventana: ['foto2.png', 'foto3.png'],          // las dos polaroids (la 2.ª es opcional)
+    pies: ['My girl', 'mi vista favorita'],        // lo que se escribe a mano debajo de cada polaroid
+    principal: 'foto1.png'
+  },
+  inicio: '2026-05-16',          // el día en que empezó todo (año-mes-día): el calendario arranca aquí
+  notaInicio: 'aquí empezó todo',
+  cancion: 'cancion.mp3',
+  letra: 'letra.lrc',
+  desfase: 0,
+  anio: new Date().getFullYear(),
+  deseo: 'Más octubres contigo',
+  carta: {
+    titulo: 'Feliz octubre, mi amor',
+    parrafos: [
+      'Octubre 1. A veces me pregunto qué hice para merecerte, porque tú te mereces todo lo bonito del mundo. Cada mensaje tuyo me llena de una alegría tan pura. Me encantaría estar siempre a tu lado y darte besos.',
+      'Pero quiero que sepas que siempre estaré para ti. A pesar de las adversidades, eres y serás mi persona favorita. Me gusta todo de ti y eres increíble. Jamás dejes que alguien te diga lo contrario.',
+      'Un simple te amo no basta para describir esto que siento. Agradezco que estés conmigo, que me saques sonrisas aunque no haya tema de conversación, porque hablar contigo siempre es hermoso.',
+      'Mi vida es bella porque estás en ella. Nadie me hace sentir como tú. Mi corazón es tuyo. Y por último, quiero que sepas lo orgulloso que estoy de ti.'
+    ],
+    firma: 'Con todo mi amor, tu novio',
+    duracion: 45               // segundos que tarda en escribirse la carta completa
+  }
+};
+
+/* ========================================================= */
+const $ = s => document.querySelector(s);
+const body = document.body;
+const audio = $('#song');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const rand = (a = 1, b) => b === undefined ? Math.random() * a : a + Math.random() * (b - a);
+
+/* ---------- Ilustraciones SVG ---------- */
+let UID = 0;
+const uid = p => p + (++UID);
+const mix = (a, b, t) => {
+  const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)), A = p(a), B = p(b);
+  return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join('');
+};
+
+// Hoja de arce con lóbulos aserrados
+const LEAF_D = 'M50 3 L53 10 L57 9 L56 17 L61 15 L59 25 L64 24 L61 35 L67 33 L70 27 L73 31 L78 24 L80 28 L92 21 L87 31 L91 34 L83 40 L87 45 L77 48 L73 52 L80 55 L84 57 L89 68 L79 66 L75 71 L64 64 L57 70 L53 76 L51 98 L49 98 L47 76 L43 70 L36 64 L25 71 L21 66 L11 68 L16 57 L20 55 L27 52 L23 48 L13 45 L17 40 L9 34 L13 31 L8 21 L20 28 L22 24 L27 31 L30 27 L33 33 L39 35 L36 24 L41 25 L39 15 L44 17 L43 9 L47 10 Z';
+const LEAF_SIDE = 'M50 58 L86 26 M50 58 L14 26 M50 68 L82 64 M50 68 L18 64 M50 40 L60 28 M50 40 L40 28 M68 42 L72 33 M68 42 L77 45 M32 42 L28 33 M32 42 L23 45 M66 66 L70 60 M34 66 L30 60';
+const LEAF_COLS = ['#C2412D', '#E07A2E', '#E8A23A', '#B8322A', '#D9902F', '#8E2A28'];
+const leafPath = new Path2D();
+LEAF_D.match(/[\d.]+ [\d.]+/g).map(v => v.split(' ').map(Number))
+  .forEach(([x, y], i) => { const X = (x - 50) / 48, Y = (y - 52) / 48; i ? leafPath.lineTo(X, Y) : leafPath.moveTo(X, Y); });
+leafPath.closePath();
+const veinPath = new Path2D('M0 .92 L0 -.88 M0 .13 L.75 -.54 M0 .13 L-.75 -.54 M0 .33 L.67 .25 M0 .33 L-.67 .25');
+const heartPath = new Path2D('M0 .35 C-1 -.35 -.55 -1.1 0 -.5 C.55 -1.1 1 -.35 0 .35 Z');
+
+function leafSVG(col = '#D9622B', { dew = false } = {}) {
+  const id = uid('lf'), dark = mix(col, '#3A0E12', .5);
+  return `<svg viewBox="0 0 100 108" aria-hidden="true"><defs><radialGradient id="${id}" cx="48%" cy="42%" r="62%">
+    <stop offset="0" stop-color="${mix(col, '#FFD98A', .55)}"/><stop offset=".55" stop-color="${col}"/><stop offset="1" stop-color="${mix(col, '#3A0E12', .4)}"/></radialGradient></defs>
+    <path d="M50 94 Q52 101 57 106" stroke="${dark}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <path d="${LEAF_D}" fill="url(#${id})" stroke="${dark}" stroke-width=".8" stroke-linejoin="round"/>
+    <path d="${LEAF_SIDE}" stroke="${dark}" stroke-opacity=".5" stroke-width="1" fill="none" stroke-linecap="round"/>
+    <path d="M50 96 L50 9" stroke="${dark}" stroke-opacity=".65" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    ${dew ? '<ellipse cx="35" cy="42" rx="4.2" ry="5.2" fill="rgba(255,255,255,.45)"/><ellipse cx="33.8" cy="40.2" rx="1.4" ry="1.9" fill="#fff"/>' : ''}
+  </svg>`;
+}
+
+function heartSVG(col = '#E2453A') {
+  const id = uid('ht');
+  return `<svg viewBox="0 0 100 90" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2=".6" y2="1">
+    <stop offset="0" stop-color="${mix(col, '#FFFFFF', .35)}"/><stop offset="1" stop-color="${mix(col, '#4A0E18', .35)}"/></linearGradient></defs>
+    <path d="M50 86 C20 64 4 46 4 28 C4 14 15 4 28 4 C38 4 46 10 50 18 C54 10 62 4 72 4 C85 4 96 14 96 28 C96 46 80 64 50 86 Z" fill="url(#${id})"/>
+    <path d="M17 24 Q20 13 31 11" stroke="rgba(255,255,255,.7)" stroke-width="5" stroke-linecap="round" fill="none"/></svg>`;
+}
+
+// Ella: de espaldas, abrigo mostaza, bufanda tejida, boina y un clip de hoja en el cabello
+function girlSVG() {
+  const c = uid('gc'), h = uid('gh'), b = uid('gb'), k = uid('gk');
+  return `<svg viewBox="0 0 140 180" aria-hidden="true">
+  <defs>
+    <linearGradient id="${c}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6B256"/><stop offset=".55" stop-color="#C98A2E"/><stop offset="1" stop-color="#94601F"/></linearGradient>
+    <linearGradient id="${h}" x1="0" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="#5E3546"/><stop offset="1" stop-color="#26121D"/></linearGradient>
+    <linearGradient id="${b}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#D94C3C"/><stop offset="1" stop-color="#86241F"/></linearGradient>
+    <pattern id="${k}" width="7" height="7" patternUnits="userSpaceOnUse"><rect width="7" height="7" fill="#B8322A"/><path d="M0 5 L3.5 2 L7 5" stroke="#922520" stroke-width="1.3" fill="none"/></pattern>
+  </defs>
+  <ellipse cx="70" cy="176" rx="50" ry="5" fill="rgba(20,8,20,.35)"/>
+  <path d="M28 176 Q23 150 30 124 Q34 104 50 96 Q70 88 90 96 Q106 104 110 124 Q117 150 112 176 Z" fill="url(#${c})"/>
+  <path d="M32 126 Q26 148 33 168 L43 168 Q38 146 43 124 Z" fill="#A86E22" opacity=".8"/>
+  <path d="M108 126 Q114 148 107 168 L97 168 Q102 146 97 124 Z" fill="#A86E22" opacity=".8"/>
+  <path d="M70 104 L70 175 M55 118 Q52 146 57 172 M85 118 Q88 146 83 172" stroke="#8E5A1A" stroke-opacity=".45" stroke-width="1.2" fill="none"/>
+  <path d="M38 160 Q55 167 70 165 Q85 167 102 160" stroke="#8E5A1A" stroke-opacity=".35" stroke-width="1.2" fill="none"/>
+  <path d="M29 175 Q70 168 111 175" stroke="#F3CF8A" stroke-opacity=".55" stroke-width="2" fill="none"/>
+  <circle cx="62" cy="140" r="1.6" fill="#7A4A16"/><circle cx="78" cy="140" r="1.6" fill="#7A4A16"/>
+  <path d="M44 96 Q70 113 96 96 L99 109 Q70 125 41 109 Z" fill="url(#${k})"/>
+  <path d="M42 108 Q70 123 98 108" stroke="#7A1E1A" stroke-opacity=".5" stroke-width="1.2" fill="none"/>
+  <g class="head">
+    <g class="hair-sway">
+      <path d="M43 58 C35 70 44 80 38 92 C32 104 42 114 37 126 C34 134 41 141 47 138 Q52 145 58 139 Q64 147 70 141 Q76 147 82 139 Q88 145 93 138 C99 141 106 134 103 126 C98 114 108 104 102 92 C96 80 105 70 97 58 Z" fill="url(#${h})"/>
+      <path d="M48 70 C42 82 51 92 45 104 C40 116 48 124 44 133 M58 74 C52 86 62 96 56 108 C50 120 60 128 55 137 M66 76 C60 88 70 98 64 110 C58 122 68 130 63 140 M76 76 C70 88 80 98 74 110 C68 122 78 130 73 140 M85 74 C79 86 89 96 83 108 C77 120 87 128 82 137 M94 70 C89 82 98 92 93 104 C88 116 97 124 94 133" stroke="#9A6478" stroke-opacity=".38" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+      <path d="M47 90 Q53 85 58 91 M63 94 Q69 89 74 95 M81 92 Q87 87 92 93 M50 116 Q56 111 61 117 M68 120 Q74 115 79 121 M84 116 Q89 112 94 117" stroke="#C48DA0" stroke-opacity=".4" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    </g>
+    <circle cx="70" cy="58" r="26" fill="url(#${h})"/>
+    <path d="M56 46 Q66 38 80 42" stroke="#A8707F" stroke-opacity=".4" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <g transform="translate(88 50) rotate(28) scale(.16)"><path d="${LEAF_D}" fill="#E8A23A" stroke="#9A4A16" stroke-width="4"/></g>
+    <path d="M41 45 Q47 21 72 23 Q99 25 99 45 Q86 37 70 37 Q54 37 41 45 Z" fill="url(#${b})"/>
+    <path d="M43 45 Q70 35 97 45" stroke="#6E1C1A" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <path d="M52 32 Q62 26 75 27" stroke="#FFC2B0" stroke-opacity=".5" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M72 23 Q73 17 78 15" stroke="#86241F" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+  </g>
+  <g class="scarf-tail">
+    <path d="M92 104 Q107 124 102 150 L92 149 Q96 126 84 108 Z" fill="url(#${k})"/>
+    <path d="M93 150 L92 158 M96 150 L96 159 M99 150 L100 158 M101.5 149 L103 156" stroke="#B8322A" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+</svg>`;
+}
+
+// Tú, a lo lejos: silueta con capucha y luz de luna en el borde
+function himSVG() {
+  return `<svg viewBox="0 0 50 112" aria-hidden="true">
+  <path d="M14 38 Q25 28 36 38 Q41 52 38 68 L40 108 L28 108 L25 78 L22 108 L10 108 L12 68 Q9 52 14 38 Z" fill="#120C20"/>
+  <path d="M14 40 Q8 56 11 70 L15 70 Q13 56 17 44 Z M36 40 Q42 56 39 70 L35 70 Q37 56 33 44 Z" fill="#0C0816"/>
+  <circle cx="25" cy="19" r="9.5" fill="#120C20"/>
+  <path d="M14 22 Q13 6 25 5 Q37 6 36 22" fill="none" stroke="#120C20" stroke-width="4"/>
+  <path d="M35 38 Q41 52 38 68 M36 12 Q38 20 34 28" stroke="#FFECC8" stroke-opacity=".45" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="25" cy="109" rx="16" ry="2.5" fill="rgba(0,0,0,.35)"/>
+</svg>`;
+}
+
+// Árbol de otoño con columpio, hojas sueltas y hojas caídas al pie
+function treeSVG() {
+  const L = uid('tl'), cp = uid('tc'), bl = uid('tb');
+  const C = [[120,92,52],[78,112,40],[164,110,42],[96,66,40],[148,64,40],[122,132,40],[58,88,30],[186,84,28],[120,40,34],[90,142,30],[156,144,30]];
+  const circles = (f) => C.map(f).join('');
+  let edge = '', ground = '';
+  for (let k = 0; k < 30; k++) {
+    const [x, y, r] = C[k % C.length], a = k * 2.39;
+    edge += `<use href="#${L}" transform="translate(${(x + Math.cos(a) * r * .96).toFixed(1)} ${(y + Math.sin(a) * r * .96).toFixed(1)}) rotate(${(k * 137) % 360}) scale(${(.1 + (k % 3) * .025).toFixed(3)})"${k % 4 === 0 ? ' fill="#F2B35A"' : ''}/>`;
+  }
+  const gcols = ['#C2412D', '#E07A2E', '#E8A23A', '#8E2A28', '#D9902F'];
+  for (let k = 0; k < 14; k++) ground += `<use href="#${L}" fill="${gcols[k % 5]}" transform="translate(${70 + k * 8 + (k % 3) * 3} ${290 + (k % 3) * 2.5}) rotate(${(k * 71) % 360}) scale(.075,.05)"/>`;
+  return `<svg viewBox="0 0 240 300" aria-hidden="true">
+  <defs><path id="${L}" d="${LEAF_D}" transform="translate(-50 -52)"/><filter id="${bl}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7"/></filter><clipPath id="${cp}">${circles(([x,y,r]) => `<circle cx="${x}" cy="${y}" r="${r}"/>`)}</clipPath></defs>
+  <ellipse cx="124" cy="296" rx="80" ry="5" fill="rgba(20,8,20,.35)"/>
+  <path class="roots" d="M110 294 Q96 286 80 292 M140 294 Q154 286 172 292 M116 294 Q112 288 102 290" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path class="trunk" d="M108 296 Q116 246 114 206 Q112 184 100 168 Q88 154 70 146 L74 140 Q94 148 108 162 Q110 142 106 120 L112 118 Q118 142 118 160 Q130 138 156 126 L159 132 Q136 146 126 170 Q122 198 126 232 Q128 268 142 296 Z"/>
+  <path d="M116 286 Q113 256 116 228 M122 272 Q121 252 123 238 M110 250 Q112 232 114 214 M119 205 Q117 190 112 180" stroke="#FFDCB4" stroke-opacity=".14" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="119" cy="244" rx="2.4" ry="4" fill="rgba(0,0,0,.35)"/>
+  <g class="swing">
+    <path d="M136 146 L136 238 M152 133 L152 238" stroke="#E9D2B0" stroke-opacity=".75" stroke-width="1.3"/>
+    <rect x="128" y="236" width="32" height="5" rx="1.5" fill="#7A5242"/><rect x="128" y="236" width="32" height="1.6" rx=".8" fill="#B88A6A"/>
+  </g>
+  <g class="canopy">${circles(([x,y,r]) => `<circle cx="${x}" cy="${y}" r="${r}"/>`)}</g>
+  <g clip-path="url(#${cp})"><g filter="url(#${bl})" fill="#3C0A1C" fill-opacity=".34">${circles(([x,y,r]) => `<circle cx="${x + 10}" cy="${y + 14}" r="${(r * .8).toFixed(1)}"/>`)}</g></g>
+  <g clip-path="url(#${cp})"><g filter="url(#${bl})" fill="#FFDC96" fill-opacity=".3">${C.slice(0, 8).map(([x,y,r]) => `<circle cx="${(x - r * .32).toFixed(1)}" cy="${(y - r * .36).toFixed(1)}" r="${(r * .48).toFixed(1)}"/>`).join('')}</g></g>
+  <g class="canopy">${edge}</g>
+  ${ground}
+</svg>`;
+}
+
+// Montón de hojas donde ella salta
+function pileSVG() {
+  const L = uid('pl'), sh = uid('ps'), bits = [];
+  for (let k = 0; k < 56; k++) {
+    const x = 22 + Math.random() * 156, u = (x - 100) / 80, top = 80 - 50 * Math.sqrt(Math.max(0, 1 - u * u));
+    bits.push([x, top + Math.random() * (80 - top) * .85, Math.random() * 360, .13 + Math.random() * .08, LEAF_COLS[k % LEAF_COLS.length]]);
+  }
+  bits.sort((a, b) => a[1] - b[1]);
+  const mound = 'M10 84 Q24 40 100 30 Q176 40 190 84 Z';
+  return `<svg viewBox="0 0 200 88" aria-hidden="true"><defs><path id="${L}" d="${LEAF_D}" transform="translate(-50 -52)"/>
+    <linearGradient id="${sh}" x1="0" y1="0" x2="0" y2="1"><stop offset=".35" stop-color="#28080A" stop-opacity="0"/><stop offset="1" stop-color="#28080A" stop-opacity=".5"/></linearGradient></defs>
+    <ellipse cx="100" cy="84" rx="94" ry="5" fill="rgba(20,8,20,.35)"/>
+    <path d="${mound}" fill="#6E2A20"/>
+    ${bits.map(([x, y, r, s, c]) => `<use href="#${L}" fill="${c}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${r | 0}) scale(${s.toFixed(3)})"/>`).join('')}
+    <path d="${mound}" fill="url(#${sh})"/>
+    <path d="M52 44 Q82 32 118 35" stroke="#FFD98A" stroke-opacity=".22" stroke-width="5" fill="none" stroke-linecap="round"/>
+  </svg>`;
+}
+
+// Florero de cerámica con una ramita otoñal, sobre la repisa de la ventana
+function vaseSVG() {
+  const g = uid('vs'), L = uid('vl');
+  const leaf = (x, y, r, c) => `<g transform="translate(${x} ${y}) rotate(${r}) scale(.17)"><use class="twig" href="#${L}" fill="${c}"/></g>`;
+  return `<svg viewBox="0 0 60 120" aria-hidden="true"><defs>
+    <linearGradient id="${g}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#F6E9D6"/><stop offset=".6" stop-color="#DCC3A4"/><stop offset="1" stop-color="#A88866"/></linearGradient>
+    <path id="${L}" d="${LEAF_D}" transform="translate(-50 -96)"/></defs>
+    <path d="M30 86 Q28 50 18 20 M28 62 Q38 44 47 32 M25 46 Q15 38 9 32" stroke="#5A3A2A" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    ${leaf(18, 21, -18, '#E07A2E')}${leaf(47, 33, 32, '#C2412D')}${leaf(9, 33, -42, '#E8A23A')}${leaf(34, 50, 20, '#D9902F')}
+    <ellipse cx="30" cy="117" rx="16" ry="2.4" fill="rgba(20,8,20,.35)"/>
+    <path d="M24 72 L36 72 Q37 78 40 84 Q47 98 42 112 Q40 117 30 117 Q20 117 18 112 Q13 98 20 84 Q23 78 24 72 Z" fill="url(#${g})"/>
+    <path d="M22 88 Q19 100 22 110" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function pumpkinSVG() {
+  const g = uid('pk');
+  return `<svg viewBox="0 0 70 58" aria-hidden="true"><defs><radialGradient id="${g}" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#FBB552"/><stop offset=".7" stop-color="#DB6A22"/><stop offset="1" stop-color="#9A3A14"/></radialGradient></defs>
+  <ellipse cx="35" cy="55" rx="31" ry="3" fill="rgba(20,8,20,.35)"/>
+  <ellipse cx="17" cy="36" rx="14" ry="17" fill="url(#${g})"/><ellipse cx="53" cy="36" rx="14" ry="17" fill="url(#${g})"/>
+  <ellipse cx="27" cy="35" rx="13" ry="19" fill="url(#${g})"/><ellipse cx="43" cy="35" rx="13" ry="19" fill="url(#${g})"/>
+  <ellipse cx="35" cy="35" rx="10" ry="20" fill="url(#${g})"/>
+  <path d="M25 18 Q21 35 25 53 M45 18 Q49 35 45 53 M35 15 L35 55" stroke="#8E3412" stroke-opacity=".45" stroke-width="1.2" fill="none"/>
+  <path d="M30 24 Q31 20 34 19" stroke="#FFE0A0" stroke-opacity=".6" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M33 17 Q32 9 37 4 L40.5 6 Q36.5 10 37.5 17 Z" fill="#5E4A2A"/>
+  <path d="M39 9 Q47 3 51 8 Q53 13 47 13" stroke="#6E7A35" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M30 12 Q24 8 20 12 Q25 16 30 12 Z" fill="#7E8A3E"/></svg>`;
+}
+
+function lanternSVG() {
+  return `<svg viewBox="0 0 40 66" aria-hidden="true">
+  <path d="M13 13 Q20 1 27 13" stroke="#2E2024" stroke-width="2" fill="none"/>
+  <path d="M7 17 L33 17 L28 10 L12 10 Z" fill="#3A2A2A"/>
+  <rect x="10" y="17" width="20" height="32" rx="2" fill="rgba(255,214,140,.38)" stroke="#3A2A2A" stroke-width="2"/>
+  <path d="M20 17 L20 49" stroke="#3A2A2A" stroke-width="1.2" opacity=".6"/>
+  <rect x="16.5" y="35" width="7" height="12" rx="1" fill="#FBEBD6"/>
+  <path class="flame" d="M20 24 Q25 30 20 35 Q15 30 20 24 Z" fill="#FFD27A"/>
+  <path class="flame" d="M20 28 Q22 31 20 34 Q18 31 20 28 Z" fill="#FFF3C8"/>
+  <rect x="7" y="49" width="26" height="5" rx="1.2" fill="#3A2A2A"/>
+  <ellipse cx="20" cy="63" rx="14" ry="2.4" fill="rgba(20,8,20,.35)"/>
+</svg>`;
+}
+
+function cloudSVG() {
+  const g = uid('cl');
+  return `<svg viewBox="0 0 220 80" aria-hidden="true"><defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE3C6"/><stop offset=".55" stop-color="#F3AE8E"/><stop offset="1" stop-color="#B9607A"/></linearGradient></defs>
+  <path d="M20 66 Q3 66 6 51 Q9 38 25 41 Q26 22 47 22 Q59 7 79 16 Q93 1 115 12 Q135 5 145 24 Q167 17 177 36 Q201 33 205 52 Q209 67 190 67 Z" fill="url(#${g})" opacity=".92"/>
+  <path d="M28 40 Q30 26 47 24 M80 17 Q94 4 114 14 M146 26 Q164 20 175 36" stroke="#FFF2E2" stroke-opacity=".7" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path d="M14 66 L196 66" stroke="#9A4A68" stroke-opacity=".25" stroke-width="2"/></svg>`;
+}
+
+function moonSVG() {
+  const g = uid('mn');
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="${g}" cx="40%" cy="38%" r="65%"><stop offset="0" stop-color="#FFF8E8"/><stop offset=".7" stop-color="#F1E2C4"/><stop offset="1" stop-color="#CDB894"/></radialGradient></defs>
+  <circle cx="50" cy="50" r="46" fill="url(#${g})"/>
+  <g fill="#B8A07C" fill-opacity=".35"><circle cx="32" cy="36" r="8"/><circle cx="62" cy="28" r="5"/><circle cx="60" cy="62" r="11"/><circle cx="33" cy="68" r="6"/><circle cx="76" cy="48" r="4"/><circle cx="46" cy="50" r="3"/></g>
+  <g fill="none" stroke="#FFFFFF" stroke-opacity=".35" stroke-width="1"><path d="M26 32 A8 8 0 0 1 36 29"/><path d="M53 55 A11 11 0 0 1 66 53"/></g></svg>`;
+}
+
+// Enredadera de otoño que crece alrededor del marco de su foto
+function vineSVG() {
+  const pts = [];
+  for (let y = 120; y >= 50; y -= 1) pts.push([2.5, y]);
+  for (let a = Math.PI; a >= 0; a -= .02) pts.push([50 + Math.cos(a) * 47.5, 50 - Math.sin(a) * 47.5]);
+  for (let y = 50; y <= 82; y += 1) pts.push([97.5, y]);
+  const out = pts.map(([x, y], i) => {
+    const [nx, ny] = pts[Math.min(i + 1, pts.length - 1)], [px, py] = pts[Math.max(i - 1, 0)];
+    const tx = nx - px, ty = ny - py, l = Math.hypot(tx, ty) || 1, w = Math.sin(i * .16) * 1.8;
+    return [x + (-ty / l) * w, y + (tx / l) * w, Math.atan2(ty, tx)];
+  });
+  const d = 'M' + out.map(([x, y]) => x.toFixed(1) + ' ' + y.toFixed(1)).join(' L');
+  const L = uid('vl'), cols = ['#E07A2E', '#C2412D', '#E8A23A', '#B8322A', '#D9902F'];
+  let leaves = '', n = 0;
+  for (let i = 6; i < out.length; i += 13) {
+    const [x, y, a] = out[i], side = n % 2 ? 1 : -1, ang = a * 57.3 + side * 55 - 90;
+    leaves += `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${ang.toFixed(0)}) scale(${(.075 + (n % 3) * .015).toFixed(3)})"><use class="vl" href="#${L}" fill="${cols[n % cols.length]}" style="--i:${n}"/></g>`;
+    if (n % 3 === 1) leaves += `<circle class="berry" style="--i:${n}" cx="${(x + 2.5 * side).toFixed(1)}" cy="${(y + 1.5).toFixed(1)}" r="1.3" fill="#8E1E2A"/>`;
+    n++;
+  }
+  return `<svg class="vine" viewBox="0 0 100 125" aria-hidden="true"><defs><path id="${L}" d="${LEAF_D}" transform="translate(-50 -96)"/></defs>
+  <path class="stem" pathLength="1" d="${d}"/>${leaves}</svg>`;
+}
+
+function ringsSVG(front) {
+  const arc = (rx, ry) => `M${100 - rx} 100 A${rx} ${ry} 0 0 ${front ? 0 : 1} ${100 + rx} 100`;
+  return `<g transform="rotate(-14 100 100)" fill="none" stroke-linecap="round">
+    <path d="${arc(97, 21)}" stroke="#F3D08A" stroke-opacity="${front ? .7 : .4}" stroke-width="5"/>
+    <path d="${arc(88, 17)}" stroke="#E07A2E" stroke-opacity="${front ? .6 : .3}" stroke-width="2.6"/>
+    <path d="${arc(79, 14.5)}" stroke="#FBEBD6" stroke-opacity="${front ? .45 : .2}" stroke-width="1.2"/></g>`;
+}
+
+function worldDecoSVG() {
+  const tree = (deg, s, c) => {
+    const a = deg * Math.PI / 180, x = 100 + 67 * Math.sin(a), y = 100 - 67 * Math.cos(a);
+    return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${deg}) scale(${s})">
+      <rect x="-1.1" y="-10" width="2.2" height="11" fill="#4A2A2A"/><circle cx="-4" cy="-11" r="4.5" fill="${c}"/><circle cx="4" cy="-11.5" r="4.5" fill="${c}"/><circle cy="-15" r="6" fill="${c}"/>
+      <circle cx="-2.4" cy="-16.5" r="3" fill="#FFD98A" fill-opacity=".45"/><circle cx="3" cy="-11" r="2.6" fill="#3C0A1C" fill-opacity=".2"/></g>`;
+  };
+  return tree(-22, 1, '#E07A2E') + tree(24, .9, '#C2412D') + tree(38, .65, '#E8A23A') + tree(-38, .7, '#B8322A');
+}
+
+/* ---------- Construcción ---------- */
+$('#girlFig').innerHTML = girlSVG();
+$('#miniGirl').innerHTML = girlSVG();
+$('#him').innerHTML = himSVG();
+$('#tree').innerHTML = treeSVG();
+$('#pile').innerHTML = pileSVG();
+$('#pumpkin1').innerHTML = pumpkinSVG();
+$('#pumpkin2').innerHTML = pumpkinSVG();
+$('#lantern').innerHTML = lanternSVG();
+$('#moon').innerHTML = moonSVG();
+$('#bokeh').innerHTML = Array.from({ length: 9 }, (_, i) => {
+  const s = rand(10, 26) | 0;
+  return `<i style="left:${rand(0, 95).toFixed(0)}%;top:${rand(0, 95).toFixed(0)}%;width:${s}px;height:${s}px;animation-delay:${(-i * .8).toFixed(1)}s;animation-duration:${rand(5, 9).toFixed(1)}s"></i>`;
+}).join('');
+document.querySelectorAll('.cloud').forEach(c => c.innerHTML = cloudSVG());
+$('.hero').insertAdjacentHTML('beforeend', vineSVG());
+$('#ringBack').innerHTML = ringsSVG(false);
+$('#ringFront').innerHTML = ringsSVG(true);
+$('#worldDeco').innerHTML = worldDecoSVG();
+$('#startBtn').innerHTML = leafSVG('#C2412D', { dew: true });
+$('#swoop').innerHTML = leafSVG('#D9622B', { dew: true });
+$('.gate-name').textContent = CONFIG.nombre;
+document.querySelectorAll('.cap-name').forEach(e => e.textContent = CONFIG.nombre);
+$('#titleName').innerHTML = [...CONFIG.nombre].map((c, i) => c === ' ' ? ' ' : `<span class="ch" style="--i:${i}">${c}</span>`).join('');
+const now = new Date();
+$('#stamp').textContent = `${now.getMonth() + 1} ${String(now.getDate()).padStart(2, '0')} '${String(now.getFullYear()).slice(2)}`;
+
+
+// Constelación en forma de corazón
+(() => {
+  const svg = $('.constellation'), pts = [];
+  for (let k = 0; k <= 14; k++) {
+    const t = Math.PI + k / 14 * Math.PI * 2;
+    const x = 16 * Math.sin(t) ** 3, y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+    pts.push([50 + x * 1.55, 32 - y * 1.55]);
+  }
+  svg.querySelector('polyline').setAttribute('points', pts.map(p => p.map(n => n.toFixed(2)).join(',')).join(' '));
+  pts.slice(0, -1).forEach(([x, y], i) => {
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', i % 3 ? .75 : 1.15);
+    c.style.setProperty('--i', i); c.style.animationDelay = (i * .17) + 's';
+    svg.appendChild(c);
+  });
+})();
+
+// Continentes del planeta (giran)
+(() => {
+  let g = '';
+  const blobs = [[30,60,26,14,1],[90,120,30,18,1],[150,70,22,12,0],[60,150,18,10,0],[170,140,24,14,1],[120,40,14,8,0]];
+  for (const off of [0, 200]) for (const [x, y, rx, ry, dark] of blobs)
+    g += `<ellipse cx="${x + off}" cy="${y}" rx="${rx}" ry="${ry}" fill="${dark ? '#8E2A28' : '#F3D08A'}" opacity="${dark ? .55 : .35}"/>`;
+  for (const off of [0, 200]) for (const [x, y, r] of [[48, 100, 6], [128, 150, 4.5], [176, 40, 5], [104, 82, 3]])
+    g += `<circle cx="${x + off}" cy="${y}" r="${r}" fill="#5A1E24" opacity=".35"/><path d="M${x + off - r * .8} ${y - r * .3} A${r} ${r} 0 0 1 ${x + off + r * .4} ${y - r * .85}" stroke="#FFE0A8" stroke-opacity=".45" stroke-width="1" fill="none"/>`;
+  $('#continents').innerHTML = g;
+})();
+
+// Calendario: desde el día en que empezó todo, mes por mes, hasta octubre
+const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+const cal = $('#cal');
+let calPages = [], calDays = 0;
+const RING_D = 'M41 7 C31 0 9 2 4 12 C-1 23 12 33 28 32 C45 31 56 21 51 11 C47 4 36 2 26 4';
+const ringSVG = () => `<svg class="cal-ring" viewBox="-2 -2 58 38" aria-hidden="true"><path pathLength="1" d="${RING_D}"/></svg>`;
+function monthGrid(y, m, mark = () => '') {
+  const lead = (new Date(y, m, 1).getDay() + 6) % 7, days = new Date(y, m + 1, 0).getDate();
+  let i = 0, h = ['L','M','M','J','V','S','D'].map(d => `<span class="wd" style="--i:${i++}">${d}</span>`).join('');
+  h += '<span></span>'.repeat(lead); i += lead;
+  for (let d = 1; d <= days; d++) {
+    const c = mark(d);
+    h += `<span class="d ${c}" style="--i:${i++}">${d}${c === 'x' ? '<i class="st"></i>' : ''}${c === 'start' || c === 'today' ? ringSVG() : ''}</span>`;
+  }
+  return h;
+}
+const INICIO = (() => { const m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(CONFIG.inicio || ''); return m ? new Date(+m[1], m[2] - 1, +m[3]) : null; })();
+(() => {
+  const y = CONFIG.anio, oct1 = new Date(y, 9, 1), hoy = new Date();
+  const hoyOct = hoy.getFullYear() === y && hoy.getMonth() === 9 ? hoy.getDate() : 0;
+  $('#calYear').textContent = y;
+  $('#calGrid').innerHTML = monthGrid(y, 9, d => d < hoyOct ? 'x' : d === hoyOct ? 'today' : '');
+  $('#calLeaf').innerHTML = leafSVG('#D9622B');
+  let months = [];
+  if (INICIO && INICIO < oct1) {
+    for (const d = new Date(INICIO.getFullYear(), INICIO.getMonth(), 1); d < oct1; d.setMonth(d.getMonth() + 1)) months.push([d.getFullYear(), d.getMonth()]);
+  } else months = [6, 7, 8].map(m => [y, m]);
+  if (months.length > 8) months = [months[0], ...months.slice(-6)];
+  let html = '';
+  months.forEach(([yy, mm], k) => {
+    const first = k === 0 && INICIO && yy === INICIO.getFullYear() && mm === INICIO.getMonth(), sd = first ? INICIO.getDate() : 0;
+    html += `<div class="cal-page${first ? ' first' : ''}" style="z-index:${10 - k};--dir:${k % 2 ? -1 : 1}"><h3>${MESES[mm]}</h3><div class="pg-yr">${yy}</div>` +
+      `<div class="grid">${monthGrid(yy, mm, d => !first ? 'x' : d < sd ? 'pre' : d === sd ? 'start' : 'x')}</div>${first ? '<div class="pg-note"></div>' : ''}</div>`;
+  });
+  cal.insertAdjacentHTML('beforeend', html);
+  calPages = [...cal.querySelectorAll('.cal-page')];
+  gsap.set(cal.querySelectorAll('.st'), { rotation: -30, scaleX: 0, transformOrigin: '0% 50%' });
+  const zz = ['0 0', '100% 0'];
+  for (let k = 20; k >= 0; k--) zz.push(`${k * 5}% ${k % 2 ? 100 : 45}%`);
+  $('#calStub').style.clipPath = `polygon(${zz.join(',')})`;
+  const hoy0 = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+  if (INICIO && INICIO <= hoy0) {
+    calDays = Math.round((hoy0 - INICIO) / 864e5);
+    $('#daysT').textContent = `${calDays === 1 ? 'día' : 'días'} desde el ${INICIO.getDate()} de ${MESES[INICIO.getMonth()].toLowerCase()}`;
+  } else $('#together').hidden = true;
+})();
+
+/* ---------- Fotos (solo hay un cambio: el de la ventana) ---------- */
+const FOTOS = CONFIG.fotos || {};
+const [winA, winB] = FOTOS.ventana || [];
+const mainPhoto = FOTOS.principal || winA;
+let swapPhoto = null;
+function placeholder(i) {
+  const c = document.createElement('canvas'); c.width = 600; c.height = 750;
+  const x = c.getContext('2d'), g = x.createLinearGradient(0, 0, 600, 750);
+  g.addColorStop(0, ['#E98A6B', '#F2B35A', '#A1475A'][i % 3]); g.addColorStop(1, '#4A2C4F');
+  x.fillStyle = g; x.fillRect(0, 0, 600, 750);
+  x.fillStyle = 'rgba(251,235,214,.9)'; x.font = 'italic 600 300px Fraunces, Georgia, serif';
+  x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(CONFIG.nombre.trim()[0] || '♥', 300, 390);
+  return c.toDataURL('image/jpeg', .85);
+}
+function setImg(el, src, i) {
+  if (!el) return;
+  el.onerror = () => { el.onerror = null; el.src = placeholder(i); };
+  el.src = src || placeholder(i);
+}
+function refreshPhotos() {
+  setImg($('#viewPhoto'), winA, 0);
+  setImg($('#girlPhoto'), mainPhoto, 1);
+  setImg($('.moon-photo img'), mainPhoto, 1);
+}
+// La 2.ª polaroid solo aparece si la foto existe
+if (winB) { const im = new Image(); im.onload = () => { swapPhoto = winB; $('#viewPhoto2').src = winB; }; im.src = winB; }
+
+/* ---------- Órbitas con profundidad (efecto 3D) ---------- */
+function makeOrbit(box, html, { rx, ry, speed }) {
+  box.innerHTML = html;
+  const items = [...box.children];
+  let a = 0;
+  return dt => {
+    a += dt * speed;
+    const w = box.clientWidth, h = box.clientHeight;
+    items.forEach((it, i) => {
+      const ang = a + i * Math.PI * 2 / items.length, d = (Math.sin(ang) + 1) / 2;
+      it.style.transform = `translate(-50%,-50%) translate(${Math.cos(ang) * w * rx}px,${Math.sin(ang) * h * ry}px) scale(${.55 + .55 * d})`;
+      it.style.zIndex = d > .5 ? 3 : 1;
+      it.style.opacity = .4 + .6 * d;
+    });
+  };
+}
+const orbitGirl = makeOrbit($('#girlOrbit'),
+  Array.from({ length: 8 }, (_, i) => `<span class="orb-item">${i % 2 ? heartSVG('#F6C77B') : leafSVG(['#E07A2E', '#B8322A', '#E8A23A', '#C2412D'][(i / 2) % 4])}</span>`).join(''),
+  { rx: .72, ry: .12, speed: .45 });
+const orbitWorld = makeOrbit($('#worldOrbit'),
+  `<span class="orb-item moon-photo"><img class="photo" alt=""></span>` + Array.from({ length: 6 }, () => `<span class="orb-item">${heartSVG('#FFF3DA')}</span>`).join(''),
+  { rx: .5, ry: .13, speed: .3 });
+refreshPhotos();
+
+/* ---------- Canvas: estrellas, hojas y corazones ---------- */
+const sky = $('#skyCanvas'), sx = sky.getContext('2d');
+const fx = $('#fxCanvas'), fxx = fx.getContext('2d');
+let W = 0, H = 0;
+function resize() {
+  const dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+  for (const c of [sky, fx]) { c.width = W * dpr; c.height = H * dpr; c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0); }
+}
+resize();
+addEventListener('resize', resize);
+
+const stars = Array.from({ length: reduce ? 80 : 170 }, () => ({ x: rand(), y: rand(.78), r: rand(.4, 1.6), ph: rand(6.28), sp: rand(.6, 2.4) }));
+const shooting = [], leaves = [], hearts = [], pops = [], sparks = [];
+const SHADE = Object.fromEntries(LEAF_COLS.map(c => { const n = parseInt(c.slice(1), 16); return [c, `rgb(${(n >> 16) * .62 | 0},${(n >> 8 & 255) * .62 | 0},${(n & 255) * .62 | 0})`]; }));
+// Cuántas hojas, viento, estrellas y estrellas fugaces hay en cada escena
+const PRESET = {
+  gate:    { leaves: 18, wind: .5,  stars: .3,  shoot: 0 },
+  intro:   { leaves: 26, wind: .6,  stars: .3,  shoot: .05 },
+  dusk:    { leaves: 24, wind: .5,  stars: .35, shoot: .05 },
+  view:    { leaves: 12, wind: .4,  stars: .15, shoot: 0 },
+  october: { leaves: 20, wind: .7,  stars: .1,  shoot: 0 },
+  fall:    { leaves: 80, wind: 2.4, stars: .05, shoot: 0 },
+  stars:   { leaves: 5,  wind: .3,  stars: 1,   shoot: .7 },
+  girl:    { leaves: 22, wind: .5,  stars: .5,  shoot: .12 },
+  world:   { leaves: 6,  wind: .2,  stars: 1,   shoot: .35 },
+  finale:  { leaves: 12, wind: .4,  stars: .35, shoot: .05 }
+};
+let starAlpha = .3, wind = .5, clock = 0;
+
+function newLeaf(initial) {
+  const fromSide = !initial && wind > 1.4 && Math.random() < .6;
+  return {
+    x: fromSide ? -30 : rand(-.1 * W, 1.1 * W), y: initial ? rand(H) : fromSide ? rand(H * .7) : -30,
+    s: rand(8, 20), vy: rand(28, 70), rot: rand(6.28), vr: rand(-1.6, 1.6), fl: rand(6.28), vf: rand(1, 3.4),
+    sw: rand(6.28), col: LEAF_COLS[Math.random() * LEAF_COLS.length | 0], oval: Math.random() < .22
+  };
+}
+for (let i = 0; i < 18; i++) leaves.push(newLeaf(true));
+
+function burstHearts(el, n = 16) {
+  if (reduce) return;
+  const r = el.getBoundingClientRect();
+  for (let i = 0; i < n; i++) {
+    const a = rand(6.28);
+    hearts.push({ x: r.left + r.width / 2 + Math.cos(a) * r.width * .55, y: r.top + r.height * .45 + Math.sin(a) * r.height * .5,
+      vx: Math.cos(a) * rand(30, 90), vy: Math.sin(a) * rand(20, 60) - 40, life: 1, s: rand(6, 13), col: Math.random() < .5 ? '#F6C77B' : '#E2453A' });
+  }
+}
+
+// Hojas que salen volando del montón cuando ella cae
+function popLeaves(n, power = 1) {
+  if (reduce) return;
+  const r = $('#pile').getBoundingClientRect();
+  for (let i = 0; i < n; i++) pops.push({
+    x: r.left + r.width * rand(.15, .85), y: r.top + r.height * rand(.2, .6),
+    vx: rand(-1, 1) * 170 * power + 30, vy: -rand(220, 480) * power,
+    s: rand(7, 15), rot: rand(6.28), vr: rand(-6, 6), fl: rand(6.28), vf: rand(4, 9),
+    col: LEAF_COLS[Math.random() * LEAF_COLS.length | 0], life: 1
+  });
+}
+
+function drawLeaf(l, alpha = 1) {
+  const c = Math.cos(l.fl), flip = Math.max(.1, Math.abs(c)) * (c < 0 ? -1 : 1);
+  fxx.save(); fxx.globalAlpha = alpha; fxx.translate(l.x, l.y); fxx.rotate(l.rot); fxx.scale(l.s * flip, l.s);
+  fxx.fillStyle = c < 0 ? SHADE[l.col] : l.col;
+  if (l.oval) { fxx.beginPath(); fxx.ellipse(0, 0, .5, 1, 0, 0, 6.283); fxx.fill(); }
+  else {
+    fxx.fill(leafPath);
+    if (l.s > 11) { fxx.strokeStyle = 'rgba(70,15,10,.38)'; fxx.lineWidth = .06; fxx.stroke(veinPath); }
+  }
+  fxx.restore();
+}
+
+function drawSky(dt) {
+  const p = PRESET[scene];
+  starAlpha += (p.stars - starAlpha) * Math.min(1, dt * .9);
+  sx.clearRect(0, 0, W, H);
+  if (starAlpha > .02) for (const s of stars) {
+    sx.fillStyle = `rgba(255,244,222,${starAlpha * (.5 + .5 * Math.sin(clock * s.sp + s.ph))})`;
+    sx.beginPath(); sx.arc(s.x * W, s.y * H, s.r, 0, 6.283); sx.fill();
+  }
+  if (!reduce && Math.random() < p.shoot * dt) shooting.push({ x: rand(W * .2, W), y: rand(H * .03, H * .3), vx: -rand(380, 620), vy: rand(160, 260), life: 1 });
+  for (let i = shooting.length - 1; i >= 0; i--) {
+    const s = shooting[i]; s.x += s.vx * dt; s.y += s.vy * dt; s.life -= dt * 1.1;
+    if (s.life <= 0) { shooting.splice(i, 1); continue; }
+    const tx = s.x - s.vx * .18, ty = s.y - s.vy * .18, g = sx.createLinearGradient(s.x, s.y, tx, ty);
+    g.addColorStop(0, `rgba(255,240,210,${s.life})`); g.addColorStop(1, 'rgba(255,240,210,0)');
+    sx.strokeStyle = g; sx.lineWidth = 1.6; sx.beginPath(); sx.moveTo(s.x, s.y); sx.lineTo(tx, ty); sx.stroke();
+  }
+}
+
+function drawFx(dt) {
+  const p = PRESET[scene], target = reduce ? Math.min(10, p.leaves) : p.leaves;
+  wind += (p.wind - wind) * Math.min(1, dt * .8);
+  fxx.clearRect(0, 0, W, H);
+  if (leaves.length < target && Math.random() < dt * 14) leaves.push(newLeaf(false));
+  for (let i = leaves.length - 1; i >= 0; i--) {
+    const l = leaves[i];
+    l.sw += dt * 1.3; l.fl += l.vf * dt * (1 + wind * .3); l.rot += l.vr * dt * (1 + wind * .4);
+    l.x += (wind * 70 + Math.sin(l.sw) * 28) * dt; l.y += l.vy * dt * (1 + wind * .2);
+    if (l.y > H + 40 || l.x > W + 60) {
+      if (leaves.length > target) { leaves.splice(i, 1); continue; }
+      Object.assign(l, newLeaf(false));
+    }
+    drawLeaf(l);
+  }
+  for (let i = pops.length - 1; i >= 0; i--) {
+    const l = pops[i];
+    l.vy = Math.min(l.vy + 420 * dt, 70); l.vx += (wind * 60 - l.vx) * dt * .9;
+    l.x += l.vx * dt; l.y += l.vy * dt; l.rot += l.vr * dt; l.vr *= 1 - dt * .5; l.fl += l.vf * dt;
+    if (l.vy > 0) l.life -= dt * .22;
+    if (l.life <= 0 || l.y > H + 40) { pops.splice(i, 1); continue; }
+    drawLeaf(l, Math.min(1, l.life * 2));
+  }
+  for (let i = hearts.length - 1; i >= 0; i--) {
+    const h = hearts[i]; h.x += h.vx * dt; h.y += h.vy * dt; h.vx *= 1 - dt * .6; h.vy -= 14 * dt; h.life -= dt * .4;
+    if (h.life <= 0) { hearts.splice(i, 1); continue; }
+    fxx.save(); fxx.globalAlpha = Math.min(1, h.life * 1.6); fxx.translate(h.x, h.y); fxx.scale(h.s, h.s);
+    fxx.fillStyle = h.col; fxx.fill(heartPath); fxx.restore();
+  }
+  drawWish(dt);
+}
+
+/* ---------- Estrella fugaz que escribe el deseo ---------- */
+const wishEl = $('#wish');
+wishEl.textContent = CONFIG.deseo;
+let wishStar = null;
+function setMask(p) {
+  const v = (p * 100).toFixed(1) + '% 0';
+  wishEl.style.webkitMaskPosition = v; wishEl.style.maskPosition = v;
+}
+function launchWish() {
+  if (!CONFIG.deseo) return;
+  wishEl.classList.remove('done');
+  setMask(1);
+  if (reduce) { setMask(0); wishEl.classList.add('done'); return; }
+  wishStar = { k: 0, D: 2.8, trail: [] };
+}
+function drawWish(dt) {
+  const w = wishStar;
+  if (w) {
+    w.k = Math.min(1, w.k + dt / w.D);
+    const r = wishEl.getBoundingClientRect(), xs = -.45 + 1.9 * w.k;
+    setMask(Math.max(0, Math.min(1, (1.21 - xs) / 1.2)));
+    const x = r.left + r.width * xs, y = r.top + r.height * .5 - Math.sin(w.k * Math.PI) * 16;
+    const a = Math.min(1, w.k * 8, (1 - w.k) * 8);
+    w.trail.push([x, y]); if (w.trail.length > 22) w.trail.shift();
+    fxx.lineCap = 'round';
+    for (let i = 1; i < w.trail.length; i++) {
+      const f = i / w.trail.length;
+      fxx.strokeStyle = `rgba(255,236,200,${(f * .8 * a).toFixed(3)})`; fxx.lineWidth = .5 + f * 3;
+      fxx.beginPath(); fxx.moveTo(w.trail[i - 1][0], w.trail[i - 1][1]); fxx.lineTo(w.trail[i][0], w.trail[i][1]); fxx.stroke();
+    }
+    const g = fxx.createRadialGradient(x, y, 0, x, y, 18);
+    g.addColorStop(0, `rgba(255,248,225,${a})`); g.addColorStop(.3, `rgba(255,214,150,${.5 * a})`); g.addColorStop(1, 'rgba(255,200,130,0)');
+    fxx.fillStyle = g; fxx.beginPath(); fxx.arc(x, y, 18, 0, 6.283); fxx.fill();
+    fxx.save(); fxx.translate(x, y); fxx.rotate(clock * 2); fxx.fillStyle = `rgba(255,255,255,${a})`;
+    fxx.fillRect(-11, -.7, 22, 1.4); fxx.fillRect(-.7, -11, 1.4, 22); fxx.restore();
+    for (let i = 0; i < 2; i++) sparks.push({ x: x + rand(-4, 4), y: y + rand(-4, 4), vx: rand(-20, 20), vy: rand(5, 40), life: 1, r: rand(.6, 1.8), ph: rand(6.28) });
+    if (w.k >= 1) { wishStar = null; wishEl.classList.add('done'); }
+  }
+  for (let i = sparks.length - 1; i >= 0; i--) {
+    const p = sparks[i]; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt * .8;
+    if (p.life <= 0) { sparks.splice(i, 1); continue; }
+    fxx.fillStyle = `rgba(255,240,205,${(p.life * (.6 + .4 * Math.sin(clock * 20 + p.ph))).toFixed(3)})`;
+    fxx.fillRect(p.x - p.r * 2, p.y - p.r * .3, p.r * 4, p.r * .6); fxx.fillRect(p.x - p.r * .3, p.y - p.r * 2, p.r * .6, p.r * 4);
+  }
+}
+
+/* ---------- Letra (.lrc) ---------- */
+let lines = [];
+function parseLRC(txt) {
+  const out = []; let offset = 0;
+  txt.split(/\r?\n/).forEach(raw => {
+    const off = raw.match(/^\[offset:\s*([+-]?\d+)\]/i);
+    if (off) { offset = +off[1] / 1000; return; }
+    const stamps = [...raw.matchAll(/\[(\d+):(\d+(?:\.\d+)?)\]/g)];
+    if (!stamps.length) return;
+    let text = raw.replace(/\[[^\]]*\]/g, '').trim();
+    if (text.startsWith('>') || /instagram|@\w/i.test(text)) text = '';
+    stamps.forEach(m => out.push({ t: +m[1] * 60 + +m[2] - offset, text }));
+  });
+  return out.sort((a, b) => a.t - b.t);
+}
+
+// La escena se elige por la palabra clave de cada verso (sirve en inglés o español)
+function sceneFor(text, prev) {
+  const s = text.toLowerCase();
+  if (/world|mundo/.test(s)) return 'world';
+  if (/star|estrell/.test(s)) return 'stars';
+  if (/octob|octubre/.test(s)) return 'october';
+  if (/fall|otoño|autumn/.test(s)) return 'fall';
+  if (/pretty|view|bonita|linda|hermosa|vista/.test(s)) return 'view';
+  if (/girl|chica|niña/.test(s)) return 'girl';
+  if (s.split(/\s+/).filter(Boolean).length <= 2) return 'dusk';
+  return prev;
+}
+
+// Karaoke: cada palabra entra con desenfoque y se ilumina al cantarse
+const lineEls = [...document.querySelectorAll('.lyrics .line')];
+let li = 0, words = [], wStart = 0, wDur = 1;
+function showLine(text, start, next) {
+  const old = lineEls[li]; old.classList.remove('in'); old.classList.add('out');
+  li ^= 1;
+  const el = lineEls[li]; el.classList.remove('in', 'out'); el.textContent = ''; words = [];
+  if (!text) return;
+  text.split(/\s+/).forEach((w, i) => {
+    const s = document.createElement('span'); s.className = 'word'; s.style.setProperty('--i', i); s.textContent = w;
+    el.append(s, ' '); words.push(s);
+  });
+  wStart = start;
+  wDur = Math.min(Math.max((next ?? start + 4) - start - .4, .8), words.length * .5 + .6);
+  void el.offsetWidth; el.classList.add('in');
+}
+function karaoke(t) {
+  const n = words.length, seg = wDur / n;
+  words.forEach((w, i) => {
+    const p = Math.max(0, Math.min(1, (t - wStart - seg * i) / seg));
+    if (w._p !== p) { w._p = p; w.style.setProperty('--p', (p * 120).toFixed(1)); }
+    if (p > 0 && !w._hit) { w._hit = true; if (!reduce) gsap.fromTo(w, { '--lift': 0 }, { '--lift': .16, duration: .18, ease: 'power2.out', yoyo: true, repeat: 1 }); }
+  });
+}
+
+/* Fuente de trazo SatisfySL de Vara.js (MIT), con tildes, ñ, ü, ¿ y ¡ añadidas */
+const HW_FONT = {"lh":29.14,"sp":10.36,"c":{"33":{"b":[-1.32,5.01,-19.38],"p":[[0,4.41,"m 0,0 c 1.34,-4.99,2.12,-9.47,3.69,-14.97"],[-0.34,1.52,"m 0,0 c 0,0,-0.17,-0.35,-0.25,-0.28,-0.14,0.11,-0.3,0.28,-0.22,0.38,0.21,0.28,0.87,-0.15,0.85,-0.5,-0.02,-0.4,-0.61,-0.41,-0.96,-0.21,-0.31,0.18,-0.4,0.68,-0.16,0.95,0.31,0.35,0.9,0.23,1.23,-0.1,0.41,-0.41,-0.26,-0.91,-0.26,-0.91"]]},"34":{"b":[-1.87,5.52,-19.31],"p":[[0,19.28,"m 0,0 c -0.66,2.48,-1.33,4.98,-1.87,7.27"],[3.65,19.31,"m 0,0 c -0.66,2.48,-1.33,4.98,-1.87,7.27"]]},"35":{"b":[-5.71,11.17,-16.6],"p":[[0,16.6,"m 0,0 c -1.29,4.24,-2.57,8.49,-3.67,12.73"],[3.82,16.5,"m 0,0 c -1.3,4.21,-2.67,8.4,-3.67,12.73"],[-4.72,12.05,"m 0,0 c 3.39,-0.18,6.78,-0.21,10.17,-0.07"],[-5.71,8.16,"m 0,0 c 3.39,-0.18,6.78,-0.21,10.17,-0.07"]]},"36":{"b":[-9.66,13.23,-19.24],"p":[[0,12.28,"m 0,0 c 0,0,2.2,-4.79,-1.03,-4.83,-8.63,-0.1,4.61,14.23,-3.89,14.33,-2.8,0.04,-1.67,-4.02,-1.67,-4.02"],[-0.79,19.24,"m 0,0 c -0.17,0.68,-0.34,1.37,-0.51,2.01"],[-4.92,2.71,"m 0,0 c -0.17,0.68,-0.34,1.37,-0.51,2.01"]]},"37":{"b":[-5.01,14.86,-19.31],"p":[[0,18.56,"m 0,0 c 3.81,0.53,0.68,8.23,-1.89,7.41,-3.12,-0.99,-1,-7.81,1.89,-7.41 z"],[6.04,8.35,"m 0,0 c 3.81,0.53,0.68,8.23,-1.89,7.41,-3.12,-0.99,-1,-7.81,1.89,-7.41 z"],[-4.37,0.52,"m 0,0 c 4.32,-6.26,8.69,-12.52,13.1,-18.79"]]},"38":{"b":[-14.41,22.59,-20.41],"p":[[0,0.33,"m 0,0 c 0,0,-5.42,-20.09,0.96,-18.69,7.22,1.59,-15.37,12.44,-6.65,17.89,2.72,1.7,8.67,-4.2,8.67,-4.2"]]},"39":{"b":[-1.79,1.79,-19.31],"p":[[0,19.31,"m 0,0 c -0.82,2.45,-1.41,4.85,-1.79,7.21"]]},"40":{"b":[-8.09,8.09,-20.98],"p":[[0,20.98,"m 0,0 c -4.63,4.71,-8.09,14.26,-5.24,22.31"]]},"41":{"b":[-0.73,3.49,-21.17],"p":[[0,21.17,"m 0,0 c 2.76,6.03,-0.73,18.18,-5.33,22.54"]]},"42":{"b":[-4.27,7.67,-18.98],"p":[[0,18.98,"m 0,0 c -0.33,1.51,-0.55,2.67,-0.79,3.94"],[-4.27,17.13,"m 0,0 c 1.24,0.63,2.28,1.46,3.47,2.08,2.01,-0.36,3.08,-0.55,4.2,-0.83"],[-3.67,11.74,"m 0,0 c 0.9,-1.1,1.89,-2.2,2.88,-3.31,0.79,1.23,1.57,2.47,2.18,3.7"]]},"43":{"b":[-5.33,8.54,-14.22],"p":[[0,14.22,"m 0,0 c -0.69,2.79,-1.38,5.59,-2.01,8.44"],[-5.33,9.71,"m 0,0 c 2.88,-0.48,5.72,-0.47,8.54,-0.14"]]},"44":{"b":[-1.86,3.38,-2.66],"p":[[0,2.25,"m 0,0 c -0.88,-0.26,-1.86,2.14,-0.16,2.01,1.68,-0.13,-0.06,-1.55,0.16,-2.01,0.2,-0.42,1.74,2.96,-1.25,4.22"]]},"45":{"b":[0,8.63,-8.77],"p":[[0,8.42,"m 0,0 c 2.88,-0.34,5.75,-0.35,8.63,-0.19"]]},"46":{"b":[-3.56,3.91,-3.37],"p":[[0,2.3,"m 0,0 c 0.36,1.17,-2.35,2.73,-3.02,1.47,-0.54,-1.03,2.69,-2.55,3.02,-1.47 z"]]},"47":{"b":[-10.2,10.2,-19.21],"p":[[0,19.21,"m 0,0 c -3.45,6.22,-6.87,12.44,-10.2,18.66"]]},"48":{"b":[-9.16,15.26,-19.6],"p":[[0,19.3,"m 0,0 c -6.83,-0.3,-9.16,18.87,-3.69,18.85,6.17,-0.02,9.8,-18.58,3.69,-18.85 z"]]},"49":{"b":[-1.36,3.65,-17.9],"p":[[0,16.4,"m 0,0 c 1.04,-0.59,1.59,-1.02,2.29,-1.5,-1.46,6.05,-2.75,11.21,-3.65,17.26"]]},"50":{"b":[-3.46,13.52,-18.61],"p":[[0,13.41,"m 0,0 c 0,0,-0.66,-5.21,3.6,-5.05,6.46,0.24,0.43,8.34,-1.26,10.15,-2.26,2.43,-5.8,7.3,-5.8,7.3,2.74,-0.9,5.44,-0.64,8.19,-0.05"]]},"51":{"b":[-4.03,13.91,-19.82],"p":[[0,13.78,"m 0,0 c -3.6,-1.5,0.3,-6.04,3.46,-5.05,6.42,2,-1.54,9.03,-3.65,9.64,4.82,-2.05,6.7,8.09,-0.61,8.51,-2.36,0.14,-3.23,-2.59,-2.85,-3.79"]]},"52":{"b":[-9.07,9.07,-18.97],"p":[[0,8.45,"m 0,0 c -2.96,-0.53,-5.99,-0.45,-9.07,0.14,3.01,-3.42,5.75,-6.99,8.98,-10.66,-1.58,6.29,-2.48,12.45,-3.46,18.62"]]},"53":{"b":[-10.81,11.22,-18.51],"p":[[0,16.43,"m 0,0 c -1.02,-2.08,-4.16,-1.03,-6.63,-1.13,-0.54,2.72,-1.01,5.63,-1.99,8.71,0,0,3.27,-2.93,4.89,-2.11,4.14,2.08,0.14,10.26,-3.93,10.29,-3.15,0.02,-2.1,-3.98,-2.1,-3.98"]]},"54":{"b":[-9.96,13.1,-19.63],"p":[[0,14.72,"m 0,0 c 0,0,1.3,-4.06,-0.09,-4.21,-6.48,-0.71,-9.87,19.33,-4.63,18.29,7.86,-1.57,5.24,-17.61,-2.06,-8.33"]]},"55":{"b":[0,8.7,-18.48],"p":[[0,17.19,"m 0,0 c 2.9,-1.12,5.8,-1.28,8.7,-0.65,-3.54,5.77,-7.43,11.54,-8.7,17.31"]]},"56":{"b":[-9.75,18.12,-20.51],"p":[[0,10.73,"m 0,0 c 0,0,8.37,-7.51,2.44,-8.57,-6.72,-1.21,-2.44,8.57,-2.44,8.57,0,0,-9.75,9.11,-2.55,10.28,7.42,1.2,2.55,-10.28,2.55,-10.28 z"]]},"57":{"b":[-8.47,12.96,-20.27],"p":[[0,12.8,"m 0,0 c 0,0,-2.71,6.83,-4.86,5.61,-3.61,-2.03,0.49,-13.08,3.79,-11.83,5.56,2.11,0.1,18.4,-4.63,18.29,-2.05,-0.05,-2.15,-3.18,-2.15,-3.18"]]},"58":{"b":[-4.96,5.32,-8.39],"p":[[0,7.32,"m 0,0 c 0.36,1.17,-2.35,2.73,-3.02,1.47,-0.54,-1.03,2.69,-2.55,3.02,-1.47 z"],[-1.4,2.36,"m 0,0 c 0.36,1.17,-2.35,2.73,-3.02,1.47,-0.54,-1.03,2.69,-2.55,3.02,-1.47 z"]]},"59":{"b":[-3.14,3.5,-8.25],"p":[[0,7.18,"m 0,0 c 0.36,1.17,-1.37,2.36,-2.03,1.1,-0.54,-1.03,1.71,-2.18,2.03,-1.1 z"],[-1.29,2.36,"m 0,0 c -0.88,-0.26,-1.86,2.14,-0.16,2.01,1.68,-0.13,-0.06,-1.55,0.16,-2.01,0.2,-0.42,1.74,2.96,-1.25,4.22"]]},"60":{"b":[-5.62,5.62,-13.79],"p":[[0,13.79,"m 0,0 c -2.41,1.9,-3.86,3.32,-5.62,4.89,1.2,1.93,2.28,3.64,3.31,5.23"]]},"61":{"b":[-0.63,8.63,-11.26],"p":[[0,10.74,"m 0,0 c 2.67,-0.31,5.34,-0.52,8,-0.13"],[-0.63,7.73,"m 0,0 c 2.67,-0.31,5.34,-0.52,8,-0.13"]]},"62":{"b":[-2.58,5.23,-13.98],"p":[[0,13.98,"m 0,0 c 1.14,1.79,2.2,3.55,2.65,5.16,-1.04,1.63,-3.15,3.26,-5.23,4.89"]]},"63":{"b":[-3.1,16.22,-20.47],"p":[[0,14.58,"m 0,0 c -0.68,0.28,-0.35,-5.89,5.03,-4.83,8.1,1.6,-1.06,10.91,-4.56,10.12,-0.76,1.79,-1.4,3.57,-1.72,5.36"],[-0.52,2.25,"m 0,0 c 0.36,1.17,-1.37,2.36,-2.03,1.1,-0.54,-1.03,1.71,-2.18,2.03,-1.1 z"]]},"64":{"b":[-11.82,20.03,-17.08],"p":[[0,10.21,"m 0,0 c 0.51,0.37,2.06,-2.43,0.73,-3.04,-3.23,-1.5,-7.88,6.35,-5.36,8.73,3.15,2.97,7.2,-7.78,7.2,-7.79,0,0,-5.6,9.77,-2.12,10.38,6.21,1.09,7.76,-14.28,0.32,-14.61,-12.59,-0.55,-12.54,17.38,-3.57,16.01"]]},"65":{"b":[-0.61,15.88,-20.29],"p":[[0,-3.34,"m 0,0 c 1.46,0.25,6.25,-23.63,12.07,-22.4,3.21,0.67,-3.42,23.86,-0.89,23.57"],[-0.61,4.14,"m 0,0 c 4.56,-2.95,9.49,-0.45,13.94,-1.08"]]},"66":{"b":[-4.16,14.2,-21.06],"p":[[0,19.44,"m 0,0 c -1.53,7.16,-3.57,14.48,-5.85,21.89,0,0,8.65,3.27,11.32,-5.14,1.38,-4.37,-6.97,-6.87,-7.16,-5,-0.3,3,11.72,-6.37,7.16,-10.99,-2.34,-2.37,-9.64,2.62,-9.64,2.62"]]},"67":{"b":[-6.81,11.74,-20.76],"p":[[0,11.21,"m 0,0 c 1.93,0.56,4.93,-6.76,0.7,-7.76,-7.51,-1.79,-15.13,19.63,-6.83,22.12,3.32,1,6.5,-4.68,6.5,-4.68"]]},"68":{"b":[-2.51,12.78,-21.96],"p":[[0,15.0,"m 0,0 c -1.36,5.61,-2.24,11.07,-4.63,17.03,-0.15,-0.12,9.09,4.63,12.68,-10.62,2.22,-9.46,-6.94,-13.38,-10.56,-7.86"]]},"69":{"b":[-11.5,16.39,-20.25],"p":[[0,12.38,"m 0,0 c 1.52,-0.52,4.88,-5.12,0.7,-6.78,-2.73,-1.09,-6.65,1.31,-7.62,4.72,-1.65,5.75,4.75,8.63,5.14,6.92,0.49,-2.13,-9.73,1.16,-8.09,7.02,2.43,8.72,11.25,0.16,10.8,-2.34"]]},"70":{"b":[-4.14,13.08,-20.66],"p":[[0,13.5,"m 0,0 c 0,0,-4.14,-1.38,-3.41,-2.62,1.97,-3.34,12.35,-4.55,11.69,-1.08,-0.93,4.9,-9.56,20.19,-7.39,20.77"],[-2.76,7.89,"m 0,0 c 3.68,-0.63,7.36,-1.19,11.04,-0.47"]]},"71":{"b":[-7.18,10.61,-20.61],"p":[[0,10.88,"m 0,0 c 2.58,-0.23,3.42,-7.69,0.61,-8.23,-7.79,-1.5,-14.34,19.97,-6.92,22.78,4.32,1.63,8.18,-9.86,7.06,-9.81,-1.73,0.36,-3.13,0.13,-4.86,0.08,2.49,0.28,4.99,-0.07,7.48,-0.33"]]},"72":{"b":[-5.0,14.13,-19.02],"p":[[0,19.02,"m 0,0 c -2.05,7.52,-3.84,15.13,-5.52,22.78"],[9.12,18.74,"m 0,0 c -2.29,7.34,-4.3,14.69,-5.47,22.03,0.54,-3.88,0.84,-12.86,-8.65,-10.29,4.8,-1.33,9.37,-1.27,13.8,-0.23"]]},"73":{"b":[-0.33,5.56,-19.0],"p":[[0,16.91,"m 0,0 c -0.33,-0.22,1.79,-2.09,3.16,-1.82,2.08,0.4,-3.6,22.24,-7.37,22.31,-2.2,0.04,-3.94,-2.51,-3.94,-2.51"]]},"74":{"b":[-11.34,15.24,-18.6],"p":[[0,18.28,"m 0,0 c 0,0,-1.74,22.91,-9.66,21.96,-5.07,-0.61,-1.68,-10,2.32,-10.65"],[-5.49,17.82,"m 0,0 c 3.3,-0.37,6.62,-0.77,9.39,-0.13"]]},"75":{"b":[-4.8,11.94,-19.21],"p":[[0,19.01,"m 0,0 c -2.42,7.5,-4.04,14.99,-5.23,22.49"],[7.14,19.21,"m 0,0 c -1.11,8.9,-6.16,11.96,-11.94,13.1,0,0,8.84,-2.46,7.9,1.42,-1.74,7.2,-2.8,11.88,3.31,9.62"]]},"76":{"b":[-2.2,18.83,-21.93],"p":[[0,10.93,"m 0,0 c 2.66,3.28,16.64,-4.95,11.27,-7.76,-6.18,-3.24,-7.82,28.58,-13.89,20.07,-0.51,-0.71,0.42,-2.07,1.87,-1.77,2.81,0.58,9.92,7.64,11.04,1.77"]]},"77":{"b":[-2.3,19.1,-18.88],"p":[[0,7.24,"m 0,0 c -2.3,1.01,-5.08,9.97,-0.99,10.38,4.24,0.43,6.43,-21.9,8.53,-21.89,-0.56,6.35,-1.14,12.04,0.66,18.12,1.46,-6.24,4.56,-12.19,7.94,-18.26,0.66,7.34,-5.83,21.22,-0.2,22.23"]]},"78":{"b":[-0.31,16.13,-20.42],"p":[[0,-3.35,"m 0,0 c -0.31,-7.21,2.8,-14.62,4.2,-21.93,0.93,7.4,1.06,15.28,2.88,21.8,0.54,-0.07,2.64,-23.64,7.14,-22.29,0.61,0.18,0.9,1.19,0.95,1.57,0.66,5.16,-6.26,6.7,-7.1,5.31"]]},"79":{"b":[-6.27,13.11,-24.25],"p":[[0,19.41,"m 0,0 c -6.27,-0.68,-12.64,22.13,-4.43,22.95,7.38,0.74,11.27,-27.79,3.31,-21.03"]]},"80":{"b":[-3.99,12.98,-23.32],"p":[[0,17.36,"m 0,0 c -1.51,6.9,-3.03,13.8,-5.75,20.7"],[-3.97,15.57,"m 0,0 c -0.02,0.01,10.25,-7.75,11.67,0.99,1.28,7.89,-10.52,9.26,-10.52,9.26"]]},"81":{"b":[-3.16,17.1,-20.51],"p":[[0,0.73,"m 0,0 c -5.39,2.82,-3.16,-19.78,6.36,-18.05,7.58,1.37,-2.96,27.03,-7.2,20.11,-0.81,-1.31,0.15,-2.04,0.57,-2.14,3.41,-0.78,9.31,6.2,10.09,4.1"]]},"82":{"b":[-4.53,14.48,-21.81],"p":[[0,17.43,"m 0,0 c -1.4,6.95,-3.18,13.91,-5.33,20.86"],[-4.02,15.32,"m 0,0 c -0.04,-1.01,8.96,-6.49,11.09,-1.45,2.89,6.86,-10.28,14.79,-11.46,10.06,-0.13,-0.52,0.69,-0.88,0.69,-0.88,9.15,-2.55,4.93,17.21,10.35,11.03"]]},"83":{"b":[-10.05,12.31,-20.39],"p":[[0,12.4,"m 0,0 c 0,0,2.25,-5.3,-0.66,-6.68,-2.77,-1.31,-6.81,1.25,-6.86,4.89,-0.05,3.8,7.48,8.7,4.34,14.79,-1.84,3.57,-3.97,3.43,-5.09,2.92,-3.19,-1.45,-1.79,-6.07,-1.79,-6.07"]]},"84":{"b":[0,12.63,-18.26],"p":[[0,17.09,"m 0,0 c 4.21,-1.17,8.42,-1.09,12.63,-1.06"],[7.01,18.02,"m 0,0 c -2.15,7.38,-3.99,14.66,-5.09,21.7"]]},"85":{"b":[0,8.93,-19.08],"p":[[0,18.62,"m 0,0 c 0,0,-8.8,21.19,-1.59,21.63,6.45,0.4,9.19,-22.09,10.52,-22.09,-2.3,7.32,-4.57,14.65,-3.77,22.49"]]},"86":{"b":[-3.97,13.03,-18.95],"p":[[0,18.95,"m 0,0 c -2.19,7.8,-3.97,17.85,0.33,22.23,3.51,-7.43,4.84,-14.73,8.73,-22.09"]]},"87":{"b":[-0.54,15.05,-19.34],"p":[[0,18.88,"m 0,0 c -0.54,0,-7.76,21.43,-2.18,21.3,3.66,-0.09,9.35,-18.36,7.94,-18.72,-1.64,-0.41,-2.96,18.76,0.4,19.18,5.45,0.68,8.36,-18.52,6.48,-22.23"]]},"88":{"b":[-6.16,17.2,-19.48],"p":[[0,13.39,"m 0,0 c -1.32,3.76,-6.16,-2.3,-2.65,-5.16,0.82,-0.67,1.72,-0.93,2.34,-0.42,2.87,2.34,1.02,19.52,5.26,22.18,1.41,0.88,4.23,-2.65,4.23,-2.65"],[11.05,19.01,"m 0,0 c -4.65,0.27,-8.83,14.16,-16.54,22.19"]]},"89":{"b":[-6.22,14.36,-19.32],"p":[[0,19.25,"m 0,0 c 0,0,-6.22,14.06,-1.13,15.57,5.85,1.74,9.27,-15.57,9.27,-15.57,-0.41,-0.07,-1.94,20.67,-8.55,22.25,-2.21,0.53,-2.85,-0.58,-3.46,-1.5"]]},"90":{"b":[-1.4,10.38,-18.76],"p":[[0,17.47,"m 0,0 c 2.99,-1.28,5.99,-0.9,8.98,-0.75,-2.2,7.61,-10.38,14.39,-12.72,20.95,3.65,-1.05,7.19,-1.7,10.1,-0.28"]]},"91":{"b":[-6.14,6.14,-21.56],"p":[[0,21.21,"m 0,0 c 0,0,-1.78,-0.35,-1.98,0.28,-1.99,6.18,-4.16,14.43,-5.49,22.03,-0.15,0.83,2.51,0.2,2.51,0.2"]]},"92":{"b":[0,3.13,-19.21],"p":[[0,19.21,"m 0,0 c 1.03,6.25,1.88,12.4,3.13,18.76"]]},"93":{"b":[-0.26,2.94,-21.68],"p":[[0,21.31,"m 0,0 c 0,0,2.68,-0.37,2.57,0.56,-0.82,6.91,-2.83,14.26,-5,21.66,-0.25,0.84,-2.62,0.23,-2.62,0.23"]]},"94":{"b":[0,7.16,-20.91],"p":[[0,10.18,"m 0,0 c 0.3,0.06,5.12,-10.73,6.08,-8.42,0.67,1.61,1.08,8.42,1.08,8.37"]]},"95":{"b":[0,12.54,-1.52],"p":[[0,1.15,"m 0,0 c 4.25,-0.36,8.41,-0.37,12.54,-0.23"]]},"96":{"b":[0,4.12,-17.66],"p":[[0,17.66,"m 0,0 c 1.58,0.7,3.25,1.34,4.12,2.53"]]},"97":{"b":[-8.05,15.02,-11.24],"p":[[0,8.63,"m 0,0 c 0,0,0.38,-2,-0.33,-2.1,-3.42,-0.5,-7.73,8.22,-4.75,9.96,3.03,1.78,6.41,-6.9,6.43,-7.86,0,0,-2.85,7.36,-0.37,7.93,2.51,0.57,5.99,-6.1,5.99,-6.1"]]},"98":{"b":[-4.04,15.5,-18.45],"p":[[0,6.06,"m 0,0 c 0,0,6.17,-12.39,4.12,-12.35,-1.98,0.04,-8.16,16.61,-3.18,17.78,3.84,0.9,6.74,-8.02,4.86,-8.87,-0.35,-0.16,-0.96,-0.04,-1.22,0.52,-1.29,2.76,6.89,-0.01,6.89,-0.01"]]},"99":{"b":[-8.1,14.18,-11.99],"p":[[0,7.51,"m 0,0 c 1.89,0.67,2.85,-2.81,0.89,-3.41,-3.43,-1.06,-8.99,8.31,-3.04,10.34,3.3,1.13,8.23,-6.45,8.23,-6.45"]]},"100":{"b":[-8.58,16.09,-18.48],"p":[[0,7.26,"m 0,0 c 0,0,0.8,-3.28,-1.1,-3.34,-4.62,-0.16,-7.48,8.23,-4.45,9.69,5.87,2.84,12.02,-17.3,10.11,-17.44,-1.96,-0.14,-7.31,17.02,-3.46,17.8,2.17,0.44,6.3,-6.49,6.41,-6.44"]]},"101":{"b":[-3.93,14.89,-13.79],"p":[[0,4.06,"m 0,0 c 0.33,0.39,8.49,-4.09,6.18,-6.52,-3.05,-3.21,-10.12,9.39,-3.64,9.99,3.87,0.36,8.42,-6.09,8.14,-6.09"]]},"102":{"b":[-4.83,11.1,-18.32],"p":[[0,18.32,"m 0,0 c 1.82,1.99,-4.94,20.83,-5.8,28.39,-0.36,3.18,7.66,-4.53,7.06,-8.28,-0.55,-3.45,-6.1,-5.32,-5.54,-6.64,1.28,-3.07,10.55,-3.22,10.55,-3.23"]]},"103":{"b":[-7.56,13.75,-10.71],"p":[[0,7.07,"m 0,0 c 0,0,0.33,-3.63,-1.98,-3.57,-3.29,0.09,-5.58,7.93,-2.65,9.43,3.29,1.68,6.52,-8.96,6.52,-8.96,-0.4,0,-3.12,21.61,-6.32,21.73,-2.15,0.08,-3.04,-6.1,-1.65,-7.74,2.01,-2.39,12.06,-8.57,12.27,-10.32"]]},"104":{"b":[-3.9,12.63,-18.22],"p":[[0,18.22,"m 0,0 c -0.92,7.45,-2.6,11.73,-3.9,17.59,0,0,2.19,-11.01,7.13,-9.78,3.02,0.76,-2.37,6.98,-1.31,9.25,1.2,2.57,6.81,-5.16,6.81,-5.16"]]},"105":{"b":[-3.55,9.27,-17.0],"p":[[0,10.55,"m 0,0 c 0,0,-3.55,8.45,-0.83,9.82,1.95,0.99,6.53,-6.3,6.55,-6.28"],[1.86,16.58,"m 0,0 c 1.15,0.47,0.22,2.57,-1.05,1.89,-0.85,-0.45,0,-2.32,1.05,-1.89 z"]]},"106":{"b":[0,5.38,-17.1],"p":[[0,10.27,"m 0,0 c 0,0,-3.61,21.85,-6.64,20.53,-7.5,-3.26,9.35,-13.29,12.02,-17.21"],[1.94,16.68,"m 0,0 c 1.15,0.47,0.22,2.57,-1.05,1.89,-0.85,-0.45,0,-2.32,1.05,-1.89 z"]]},"107":{"b":[-3.93,12.39,-18.27],"p":[[0,18.27,"m 0,0 c -0.16,5.75,-2.62,11.79,-3.93,17.68,0,0,4.09,-12.03,7.67,-9.87,1.66,1,-2.85,6.85,-4.19,5.77,-0.34,-0.28,-0.32,-0.35,-0.2,-0.91,0.11,-0.54,0.55,-0.45,1.01,-0.28,2,0.76,0.98,5.02,2.27,5.14,2.71,0.26,5.85,-5.71,5.85,-5.71"]]},"108":{"b":[-3.7,3.7,-18.15],"p":[[0,18.15,"m 0,0 c -0.28,5.79,-2.47,11.8,-3.7,17.69"]]},"109":{"b":[-1.85,19.48,-12.25],"p":[[0,9.92,"m 0,0 c 0.58,2.64,-1.23,6.28,-1.85,9.43,0,0,4.55,-11.76,7.41,-9.82,2.28,1.54,-1.52,9.66,-1.52,9.66,0,0,3.63,-10.83,6.91,-9.79,3.2,1.01,-1.58,9.63,0.03,10.05,2.54,0.67,6.65,-6.71,6.65,-6.71"]]},"110":{"b":[-2.22,12.93,-11.43],"p":[[0,10.21,"m 0,0 c -0.29,3.21,-1.46,6.42,-2.22,9.62,0,0,2.71,-10.84,6.48,-9.79,3.12,0.87,-1.99,9.57,0.4,9.72,2.92,0.19,6.05,-6.32,6.05,-6.32"]]},"111":{"b":[-2.95,13.12,-14.34],"p":[[0,9.16,"m 0,0 c -2.05,1.99,-2.95,8.73,0.17,8.7,6.72,-0.06,5.6,-13.88,0.13,-8.93,-1.1,0.99,-0.77,2.95,-0.05,3.76,2.15,2.38,9.93,-1.54,9.8,-3.23"]]},"112":{"b":[-1.35,11.69,-11.44],"p":[[0,10.27,"m 0,0 c 0.8,1.25,-2.9,13.25,-4.35,19.88"],[-0.23,6.9,"m 0,0 c 0,0,3.75,-4.54,5.33,-3.27,2.83,2.25,-6.34,12.31,-6.41,8.93,-0.04,-2.35,7.76,4.98,11.65,-5.56"]]},"113":{"b":[-7.98,13.4,-10.22],"p":[[0,7.28,"m 0,0 c 0,0,0.06,-2.94,-1.54,-2.9,-3.71,0.09,-6.44,8.21,-3.46,9.59,3.43,1.58,7.02,-9.59,7.02,-9.59,-2.01,2.9,-6.53,23.19,-5.03,20.2,0.76,-1.5,6.84,-11.23,8.44,-14.4"]]},"114":{"b":[0,13.38,-12.47],"p":[[0,0.87,"m 0,0 c 0,0,5.68,-9.55,5.73,-10.75,0.02,-0.39,-0.64,-0.85,-1.31,-0.23,-2.54,2.36,0.87,3.53,2.97,3.26,2.68,-0.35,-3.21,6.54,-0.84,7.86,2.67,1.48,6.83,-6.13,6.83,-6.13"]]},"115":{"b":[0,6.95,-12.07],"p":[[0,4.96,"m 0,0 c 0,0,6.95,-6.74,4.2,-6.91,-3.35,-0.21,1.56,6.8,1.26,9.13,-0.21,1.6,-1.94,2.43,-3.04,2.28,-1.08,-0.14,-1.59,-2.84,-1.59,-2.84"]]},"116":{"b":[-6.74,12.21,-18.18],"p":[[0,18.18,"m 0,0 c 0.04,3.04,-5.22,13.29,-2.95,17.26,1.54,2.7,7.3,-6.17,7.3,-6.17"],[-6.74,14.15,"m 0,0 c 3.73,0.85,8.13,-0.67,12.21,0.05"]]},"117":{"b":[-3.44,14.57,-10.33],"p":[[0,10.06,"m 0,0 c -0.57,-0.09,-3.44,8.46,-0.33,9.45,3.62,1.15,7.8,-9.19,6.36,-9.45,-1.47,-0.27,-3.15,6.25,-1.17,9.35,1.04,1.62,6.27,-6.34,6.27,-6.34"]]},"118":{"b":[-1.85,13.26,-10.66],"p":[[0,10.31,"m 0,0 c -1.85,3.56,-1.14,7.23,0.46,9.99,3.59,-2.59,7.06,-9.32,6.84,-9.95,-0.13,-0.38,-0.63,-0.18,-0.95,0.16,-4.23,4.63,2.11,6.36,5.06,2.15"]]},"119":{"b":[-3.19,19.38,-10.78],"p":[[0,10.51,"m 0,0 c 0,0,-3.19,9.21,0.05,10.01,3.7,0.92,7.09,-10.11,5.38,-10.1,-2.15,0,-3.52,9.65,0.51,10.06,3.19,0.32,5.27,-8.53,5.33,-9.56,0.04,-0.67,-0.89,-0.67,-1.26,0.11,-3.2,6.74,5.96,4.54,6.17,2.15"]]},"120":{"b":[-2.15,11.74,-10.84],"p":[[0,10.84,"m 0,0 c 2.66,3.05,1.89,9.99,4.37,10.25,2.59,0.28,5.23,-4.33,5.23,-4.33"],[7.01,10.78,"m 0,0 c -2.8,3.45,-5.75,6.89,-9.16,10.25"]]},"121":{"b":[-3.34,9.54,-10.41],"p":[[0,10.28,"m 0,0 c 0.83,1.87,-3.34,8.37,-0.39,9.36,3.65,1.23,6.59,-9.49,6.59,-9.49,-1.67,6.67,-3.57,13.28,-4.54,20.16"]]},"122":{"b":[0,10.15,-10.55],"p":[[0,9.2,"m 0,0 c 2.15,-1.35,4.46,-1.01,6.74,-1.08,-1.32,3.1,-3.59,5.66,-5.75,8.28,0,0,3.23,-2.76,4.26,-1.64,3.32,3.63,-4.24,14.76,-6.5,13.24,-7.3,-4.94,10.18,-11.26,11.41,-15.2"]]},"123":{"b":[-11.63,11.63,-21.06],"p":[[0,20.53,"m 0,0 c -5.34,-0.53,-1.3,8.49,-7.08,10.05,5.19,2.89,-4.55,9.91,1.98,11.84"]]},"124":{"b":[-4.37,4.37,-19.21],"p":[[0,19.21,"m 0,0 c -2.03,6.41,-3.39,12.59,-4.37,18.65"]]},"125":{"b":[-4.11,10.74,-21.06],"p":[[0,21.06,"m 0,0 c 6.63,1.63,-3.61,9.02,1.65,11.91,-5.76,0.29,0,10.71,-6.81,10.45"]]},"126":{"b":[0,9.19,-12.39],"p":[[0,9.32,"m 0,0 c 3.04,-3.07,6.64,2.47,9.19,-1.49"]]},"225":{"b":[-8.05,15.02,-18.14],"p":[[0,8.63,"m 0,0 c 0,0,0.38,-2,-0.33,-2.1,-3.42,-0.5,-7.73,8.22,-4.75,9.96,3.03,1.78,6.41,-6.9,6.43,-7.86,0,0,-2.85,7.36,-0.37,7.93,2.51,0.57,5.99,-6.1,5.99,-6.1"],[-0.34,13.84,"m 0,0 c 1.1,-1.3 2.3,-2.8 3.4,-4.3"]]},"233":{"b":[-3.93,14.89,-20.69],"p":[[0,4.06,"m 0,0 c 0.33,0.39,8.49,-4.09,6.18,-6.52,-3.05,-3.21,-10.12,9.39,-3.64,9.99,3.87,0.36,8.42,-6.09,8.14,-6.09"],[3.72,16.39,"m 0,0 c 1.1,-1.3 2.3,-2.8 3.4,-4.3"]]},"237":{"b":[-3.55,9.27,-18.68],"p":[[0,10.55,"m 0,0 c 0,0,-3.55,8.45,-0.83,9.82,1.95,0.99,6.53,-6.3,6.55,-6.28"],[0.26,14.38,"m 0,0 c 1.1,-1.3 2.3,-2.8 3.4,-4.3"]]},"243":{"b":[-2.95,13.12,-21.24],"p":[[0,9.16,"m 0,0 c -2.05,1.99,-2.95,8.73,0.17,8.7,6.72,-0.06,5.6,-13.88,0.13,-8.93,-1.1,0.99,-0.77,2.95,-0.05,3.76,2.15,2.38,9.93,-1.54,9.8,-3.23"],[3.81,16.94,"m 0,0 c 1.1,-1.3 2.3,-2.8 3.4,-4.3"]]},"250":{"b":[-3.44,14.57,-17.23],"p":[[0,10.06,"m 0,0 c -0.57,-0.09,-3.44,8.46,-0.33,9.45,3.62,1.15,7.8,-9.19,6.36,-9.45,-1.47,-0.27,-3.15,6.25,-1.17,9.35,1.04,1.62,6.27,-6.34,6.27,-6.34"],[4.04,12.93,"m 0,0 c 1.1,-1.3 2.3,-2.8 3.4,-4.3"]]},"193":{"b":[-0.61,15.88,-26.79],"p":[[0,-3.34,"m 0,0 c 1.46,0.25,6.25,-23.63,12.07,-22.4,3.21,0.67,-3.42,23.86,-0.89,23.57"],[-0.61,4.14,"m 0,0 c 4.56,-2.95,9.49,-0.45,13.94,-1.08"],[8.93,22.49,"m 0,0 c 1.1,-1.3 2.3,-2.8 3.4,-4.3"]]},"201":{"b":[-11.5,16.39,-26.75],"p":[[0,12.38,"m 0,0 c 1.52,-0.52,4.88,-5.12,0.7,-6.78,-2.73,-1.09,-6.65,1.31,-7.62,4.72,-1.65,5.75,4.75,8.63,5.14,6.92,0.49,-2.13,-9.73,1.16,-8.09,7.02,2.43,8.72,11.25,0.16,10.8,-2.34"],[-1.71,22.45,"m 0,0 c 1.1,-1.3 2.3,-2.8 3.4,-4.3"]]},"205":{"b":[-0.33,5.56,-25.5],"p":[[0,16.91,"m 0,0 c -0.33,-0.22,1.79,-2.09,3.16,-1.82,2.08,0.4,-3.6,22.24,-7.37,22.31,-2.2,0.04,-3.94,-2.51,-3.94,-2.51"],[0.14,21.2,"m 0,0 c 1.1,-1.3 2.3,-2.8 3.4,-4.3"]]},"211":{"b":[-6.27,13.11,-30.75],"p":[[0,19.41,"m 0,0 c -6.27,-0.68,-12.64,22.13,-4.43,22.95,7.38,0.74,11.27,-27.79,3.31,-21.03"],[-1.3,26.45,"m 0,0 c 1.1,-1.3 2.3,-2.8 3.4,-4.3"]]},"218":{"b":[0,8.93,-25.58],"p":[[0,18.62,"m 0,0 c 0,0,-8.8,21.19,-1.59,21.63,6.45,0.4,9.19,-22.09,10.52,-22.09,-2.3,7.32,-4.57,14.65,-3.77,22.49"],[1.66,21.28,"m 0,0 c 1.1,-1.3 2.3,-2.8 3.4,-4.3"]]},"241":{"b":[-2.22,12.93,-15.83],"p":[[0,10.21,"m 0,0 c -0.29,3.21,-1.46,6.42,-2.22,9.62,0,0,2.71,-10.84,6.48,-9.79,3.12,0.87,-1.99,9.57,0.4,9.72,2.92,0.19,6.05,-6.32,6.05,-6.32"],[2.75,13.83,"m 0,0 c 0.9,-1.7 2.1,-2 3.2,-0.9 1.1,1.1 2.3,0.9 3.3,-0.9"]]},"209":{"b":[-0.31,16.13,-24.42],"p":[[0,-3.35,"m 0,0 c -0.31,-7.21,2.8,-14.62,4.2,-21.93,0.93,7.4,1.06,15.28,2.88,21.8,0.54,-0.07,2.64,-23.64,7.14,-22.29,0.61,0.18,0.9,1.19,0.95,1.57,0.66,5.16,-6.26,6.7,-7.1,5.31"],[7.66,22.42,"m 0,0 c 0.9,-1.7 2.1,-2 3.2,-0.9 1.1,1.1 2.3,0.9 3.3,-0.9"]]},"252":{"b":[-3.44,14.57,-14.36],"p":[[0,10.06,"m 0,0 c -0.57,-0.09,-3.44,8.46,-0.33,9.45,3.62,1.15,7.8,-9.19,6.36,-9.45,-1.47,-0.27,-3.15,6.25,-1.17,9.35,1.04,1.62,6.27,-6.34,6.27,-6.34"],[3.05,13.93,"m 0,0 c 1.15,0.47,0.22,2.57,-1.05,1.89,-0.85,-0.45,0,-2.32,1.05,-1.89 z"],[7.35,13.93,"m 0,0 c 1.15,0.47,0.22,2.57,-1.05,1.89,-0.85,-0.45,0,-2.32,1.05,-1.89 z"]]},"191":{"b":[-3.1,16.22,-20.47],"p":[[10.03,5.79,"m 0,0 c 0.68,-0.28,0.35,5.89,-5.03,4.83,-8.1,-1.6,1.06,-10.91,4.56,-10.12,0.76,-1.79,1.4,-3.57,1.72,-5.36"],[10.55,18.12,"m 0,0 c -0.36,-1.17,1.37,-2.36,2.03,-1.1,0.54,1.03,-1.71,2.18,-2.03,1.1 z"]]},"161":{"b":[-1.32,5.01,-19.38],"p":[[2.37,15.79,"m 0,0 c -1.34,4.99,-2.12,9.47,-3.69,14.97"],[2.71,18.68,"m 0,0 c 0,0,0.17,0.35,0.25,0.28,0.14,-0.11,0.3,-0.28,0.22,-0.38,-0.21,-0.28,-0.87,0.15,-0.85,0.5,0.02,0.4,0.61,0.41,0.96,0.21,0.31,-0.18,0.4,-0.68,0.16,-0.95,-0.31,-0.35,-0.9,-0.23,-1.23,0.1,-0.41,0.41,0.26,0.91,0.26,0.91"]]}}};
+/* ---------- Escritura a mano (fuente de trazo de Vara, animada con GSAP) ---------- */
+const HW_SVGNS = 'http://www.w3.org/2000/svg';
+function hwClean(t) {
+  return t.replace(/[’‘´`]/g, "'").replace(/[“”«»]/g, '"').replace(/…/g, '...').replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
+}
+function hwGlyph(ch) {
+  const C = HW_FONT.c;
+  return C[ch.charCodeAt(0)] || C[ch.normalize('NFD').replace(/[\u0300-\u036f]/g, '').charCodeAt(0)] || null;
+}
+// Mide una palabra en unidades de la fuente
+const HW_MIN = 3.4, HW_TRACK = -.4;
+function hwAdvance(g) { return Math.max(g.b[1], HW_MIN) + HW_TRACK; }
+function hwWord(word) {
+  const out = []; let x = 0;
+  for (const ch of word) {
+    const g = hwGlyph(ch); if (!g) continue;
+    const pad = g.b[1] < HW_MIN ? (HW_MIN - g.b[1]) / 2 : 0;
+    out.push({ g, x: x - g.b[0] + pad }); x += hwAdvance(g);
+  }
+  return { glyphs: out, w: x - HW_TRACK };
+}
+/* Dibuja `text` dentro de `el`. size = alto aprox. de una "x" en px.
+   Devuelve { svg, paths, lines, h } con los trazos listos para animar. */
+function handwrite(el, text, { size = 9, color = 'currentColor', stroke = 1.5, align = 'left', gap = 1.05, maxW } = {}) {
+  el.textContent = '';
+  const k = size / 10, sp = HW_FONT.sp * .82;
+  const avail = (maxW || el.clientWidth || 300) / k;
+  const words = hwClean(text).split(' ').filter(Boolean).map(hwWord);
+  const lines = []; let cur = [], w = 0;
+  for (const wd of words) {
+    const add = (cur.length ? sp : 0) + wd.w;
+    if (cur.length && w + add > avail) { lines.push({ words: cur, w }); cur = []; w = 0; }
+    cur.push(wd); w += (cur.length > 1 ? sp : 0) + wd.w;
+  }
+  if (cur.length) lines.push({ words: cur, w });
+  const lh = HW_FONT.lh * gap, asc = 21, desc = 9;
+  const W = avail, H = asc + desc + lh * (lines.length - 1);
+  const svg = document.createElementNS(HW_SVGNS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${(W * k).toFixed(1)} ${(H * k).toFixed(1)}`);
+  svg.setAttribute('width', (W * k).toFixed(1)); svg.setAttribute('height', (H * k).toFixed(1));
+  svg.setAttribute('aria-hidden', 'true'); svg.classList.add('hw');
+  svg.style.overflow = 'visible';
+  const paths = [];
+  let frag = '';
+  lines.forEach((ln, li) => {
+    let x = align === 'center' ? (W - ln.w) / 2 : align === 'right' ? W - ln.w : 0;
+    const base = asc + li * lh;
+    ln.words.forEach((wd, wi) => {
+      wd.glyphs.forEach(({ g, x: gx }) => g.p.forEach(([mx, my, d]) => {
+        const tx = (x + gx + mx) * k, ty = (base - my) * k;
+        paths.push({ tx, ty, line: li, word: wi, y: base * k });
+        frag += `<path d="${d}" transform="translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${k.toFixed(4)})"/>`;
+      }));
+      x += wd.w + sp;
+    });
+  });
+  svg.innerHTML = `<g fill="none" stroke="${color}" stroke-width="${(stroke / k).toFixed(3)}" stroke-linecap="round" stroke-linejoin="round">${frag}</g>`;
+  el.appendChild(svg);
+  svg.querySelectorAll('path').forEach((p, i) => {
+    const L = p.getTotalLength(); Object.assign(paths[i], { el: p, len: L });
+    p.style.strokeDasharray = `${L} ${L + 2}`; p.style.strokeDashoffset = L + 1;
+  });
+  return { svg, paths, lines: lines.length, h: H * k, k, lineH: lh * k };
+}
+/* Línea de tiempo GSAP: el trazo avanza a velocidad constante (px por segundo) */
+function hwTimeline(hw, { speed = 260, nib = null, onLine = null } = {}) {
+  const tl = gsap.timeline();
+  let lastLine = -1, lastWord = -1;
+  hw.paths.forEach(p => {
+    const dur = Math.max(.03, p.len * hw.k / speed);
+    let gapT = 0;
+    if (p.line !== lastLine) gapT = lastLine < 0 ? 0 : .22; else if (p.word !== lastWord) gapT = .07;
+    const pos = `>+${gapT}`;
+    if (p.line !== lastLine && onLine) { const L = p.line; tl.call(() => onLine(L, p.y), null, pos); }
+    tl.to(p.el, {
+      strokeDashoffset: 0, duration: dur, ease: 'none',
+      onUpdate: nib ? function () {
+        const t = this.progress(), pt = p.el.getPointAtLength(p.len * t);
+        nib(p.tx + pt.x * hw.k, p.ty + pt.y * hw.k, hw.svg);
+      } : undefined
+    }, p.line !== lastLine && onLine ? '>' : pos);
+    lastLine = p.line; lastWord = p.word;
+  });
+  return tl;
+}
+
+// Puntas que siguen al trazo: pluma (carta) y chispa dorada (títulos)
+const nibPen = $('#nibPen'), nibGlow = $('#nibGlow');
+nibPen.innerHTML = '<svg viewBox="-2 -40 34 42"><defs><linearGradient id="penG" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7A4A16"/><stop offset=".5" stop-color="#F6C77B"/><stop offset="1" stop-color="#A86E26"/></linearGradient></defs>' +
+  '<path d="M0 0 L7 -20 C9 -27 14 -33 21 -36 L30 -27 C27 -20 21 -15 14 -13 Z" fill="url(#penG)" stroke="#5A3414" stroke-width=".8" stroke-linejoin="round"/>' +
+  '<path d="M.6 -.8 L14 -19" stroke="#5A3414" stroke-width=".9"/><circle cx="15.2" cy="-20.6" r="1.9" fill="#5A3414"/></svg>';
+nibGlow.innerHTML = '<svg viewBox="-14 -14 28 28"><defs><radialGradient id="glowG"><stop offset="0" stop-color="#FFF8E6"/><stop offset=".35" stop-color="#FFD696" stop-opacity=".75"/><stop offset="1" stop-color="#FFC882" stop-opacity="0"/></radialGradient></defs>' +
+  '<circle r="13" fill="url(#glowG)"/><path d="M-9 0H9M0 -9V9" stroke="#fff" stroke-width="1" stroke-linecap="round"/></svg>';
+function nibAt(el) {
+  return (x, y, svg) => {
+    if (el._hiding) { gsap.killTweensOf(el); el._hiding = false; }
+    const r = svg.getBoundingClientRect();
+    gsap.set(el, { x: r.left + x, y: r.top + y, opacity: 1 });
+  };
+}
+const penNib = nibAt(nibPen), glowNib = nibAt(nibGlow);
+function hideNibs() {
+  [nibPen, nibGlow].forEach(el => { el._hiding = true; gsap.to(el, { opacity: 0, duration: .45, overwrite: true }); });
+}
+
+/* ---------- Escenas ---------- */
+let scene = 'gate';
+let sceneTL = null;
+const scTL = () => { if (sceneTL) sceneTL.kill(); return (sceneTL = gsap.timeline()); };
+
+// Luz cálida que barre la pantalla en cada cambio de escena
+function sweepLight() {
+  gsap.fromTo('.leak', { xPercent: -35 }, { xPercent: 35, duration: 1.9, ease: 'power1.inOut', overwrite: true });
+  gsap.fromTo('.leak', { opacity: 0 }, { keyframes: { opacity: [0, .85, 0] }, duration: 1.9, ease: 'none' });
+}
+
+// Intro: el nombre se voltea en 3D letra por letra y el subtítulo se escribe solo
+function playIntro() {
+  const tl = scTL(), chs = document.querySelectorAll('#titleName .ch'), sub = $('#introSub'), txt = CONFIG.subtitulo || '';
+  sub.setAttribute('aria-label', txt);
+  const hw = txt ? handwrite(sub, txt, { size: Math.min(17, Math.max(10.5, innerWidth * .03)), color: '#F6C77B', stroke: 2.1, align: 'center' }) : null;
+  if (reduce) { gsap.set(chs, { opacity: 1 }); if (hw) hwTimeline(hw).progress(1); return; }
+  tl.fromTo(chs, { opacity: 0, yPercent: 70, rotationX: -100, filter: 'blur(12px)', transformPerspective: 700, transformOrigin: '50% 100%' },
+    { opacity: 1, yPercent: 0, rotationX: 0, filter: 'blur(0px)', duration: 1.5, ease: 'expo.out', stagger: { each: .08, from: 'center' } }, .5);
+  if (hw) tl.add(hwTimeline(hw, { speed: 230, nib: glowNib }), 1.8).call(hideNibs);
+}
+
+// Polaroid: flash, sale de la cámara, se sacude y se revela de sepia borrosa a nítida
+const DEV0 = 'sepia(1) blur(14px) brightness(0.25) contrast(0.7) saturate(0.4)';
+const DEV1 = 'sepia(0) blur(0px) brightness(1) contrast(1) saturate(1)';
+function shoot(pol, rot, cap) {
+  const t = gsap.timeline(), img = pol.querySelector('img');
+  const hw = cap ? handwrite(pol.querySelector('.pol-cap'), cap, { size: Math.max(7, pol.clientWidth / 25), color: '#3A2027', stroke: 1.5, align: 'center' }) : null;
+  t.fromTo('.flash', { opacity: .95 }, { opacity: 0, duration: 1.2, ease: 'power2.out', immediateRender: false }, 0)
+   .fromTo(pol, { opacity: 1, yPercent: 115, rotation: rot * -2, scale: .86 }, { yPercent: 0, rotation: rot, scale: 1, duration: 1.15, ease: 'back.out(1.3)', immediateRender: false }, .05)
+   .to(pol, { keyframes: { rotation: [rot + 5, rot - 4, rot + 2.5, rot - 1, rot] }, duration: 1.1, ease: 'sine.inOut' }, 1.1)
+   .fromTo(img, { filter: DEV0 }, { filter: DEV1, duration: 3.8, ease: 'power1.inOut' }, .9)
+   .fromTo(pol.querySelector('.pol-chem'), { opacity: 1 }, { opacity: 0, duration: 3.2, ease: 'power2.in' }, .9)
+   .fromTo(pol.querySelector('.pol-gloss'), { backgroundPosition: '130% 0' }, { backgroundPosition: '-40% 0', duration: 1.8, ease: 'power2.inOut' }, 3.6);
+  if (hw) t.add(hwTimeline(hw, { speed: 170 }), 2.6);
+  return t;
+}
+function playPolaroid() {
+  const tl = scTL(), A = $('#polA'), B = $('#polB'), pies = (CONFIG.fotos && CONFIG.fotos.pies) || [];
+  gsap.set([A, B], { clearProps: 'transform', opacity: 0 });
+  if (reduce) {
+    gsap.set(A, { opacity: 1, rotation: -3 }); gsap.set(A.querySelector('img'), { filter: DEV1 }); gsap.set(A.querySelector('.pol-chem'), { opacity: 0 });
+    if (pies[0]) hwTimeline(handwrite(A.querySelector('.pol-cap'), pies[0], { size: Math.max(7, A.clientWidth / 25), color: '#3A2027', align: 'center' })).progress(1);
+    return;
+  }
+  tl.fromTo('.vf i', { scale: 1.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 1, ease: 'expo.out', stagger: .06 }, .1)
+    .to('.vf i', { scale: .8, duration: .16, ease: 'power2.inOut', yoyo: true, repeat: 1 }, 1)
+    .add(shoot(A, -3, pies[0]), 1.35);
+  if (swapPhoto) {
+    tl.addLabel('dos', '+=1.2')
+      .to(A, { xPercent: -24, yPercent: 3, rotation: -11, duration: 1.1, ease: 'power3.inOut' }, 'dos')
+      .add(shoot(B, 5, pies[1]), 'dos+=.3');
+  }
+}
+
+// Calendario: se encierra el día en que empezó todo, se tachan los días y se arrancan los meses
+let calVisits = 0;
+function playCalendar() {
+  const tl = scTL(), first = cal.querySelector('.cal-page.first');
+  calVisits++;
+  cal.classList.remove('revealed', 'ripped');
+  gsap.set(calPages, { clearProps: 'transform,opacity,boxShadow' });
+  gsap.set(cal.querySelectorAll('.st'), { scaleX: 0 });
+  gsap.set(cal.querySelectorAll('.cal-ring path'), { strokeDashoffset: 1.01 });
+  gsap.set('#together', { opacity: 0, y: 10 });
+  const n = $('#daysN'); n.textContent = 0;
+  const note = first && first.querySelector('.pg-note');
+  const noteHW = note && CONFIG.notaInicio ? handwrite(note, CONFIG.notaInicio, { size: 8, color: '#B8322A', stroke: 1.5, align: 'center' }) : null;
+  if (reduce) {
+    gsap.set(calPages, { opacity: 0 }); cal.classList.add('ripped', 'revealed');
+    gsap.set('#calGrid .st', { scaleX: 1 }); gsap.set('#calGrid .cal-ring path', { strokeDashoffset: 0 });
+    gsap.set('#together', { opacity: 1, y: 0 }); n.textContent = calDays; return;
+  }
+  let t = 1.1;
+  if (first) {
+    const cell = first.querySelector('.start');
+    tl.to(cell.querySelector('.cal-ring path'), { strokeDashoffset: 0, duration: .9, ease: 'power2.inOut' }, t)
+      .fromTo(cell, { scale: 1 }, { scale: 1.3, duration: .25, ease: 'power2.out', yoyo: true, repeat: 1 }, t + .1)
+      .call(() => burstHearts(cell, 10), null, t + .5);
+    if (noteHW) { const nt = hwTimeline(noteHW, { speed: 190 }); tl.add(nt, t + .7); t += .7 + nt.duration() + .4; } else t += 1.3;
+  }
+  calPages.forEach((p, i) => {
+    const st = p.querySelectorAll('.st'), dir = i % 2 ? -1 : 1, sd = Math.max(.3, .85 - i * .14);
+    tl.to(st, { scaleX: 1, duration: .12, ease: 'power2.out', stagger: { amount: sd } }, t);
+    t += sd + .12;
+    tl.to(p, { rotation: dir * -3, y: 3, duration: .14, ease: 'power1.out' }, t)
+      .call(() => cal.classList.add('ripped'), null, t + .1)
+      .to(p, { x: dir * 8, y: 12, rotation: dir * 7, rotationX: 10, transformPerspective: 900, boxShadow: '0 24px 30px -12px rgba(30,10,20,.45)', duration: .14, ease: 'power1.in' }, t + .14)
+      .to(p, { x: dir * innerWidth * .6, y: innerHeight * .95, rotation: dir * 75, rotationX: 45, opacity: 0, duration: .9, ease: 'power2.in' }, t + .28);
+    t += Math.max(.22, .55 - i * .08);
+  });
+  t += .35;
+  tl.call(() => cal.classList.add('revealed'), null, t)
+    .to('#calGrid .st', { scaleX: 1, duration: .12, stagger: { amount: .4 } }, t + 1.1);
+  const today = $('#calGrid .today .cal-ring path');
+  if (today) tl.to(today, { strokeDashoffset: 0, duration: .8, ease: 'power2.inOut' }, t + 1.4);
+  if (calDays > 0) {
+    const o = { v: 0 };
+    tl.to('#together', { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, t + 1)
+      .to(o, { v: calDays, duration: 2.2, ease: 'power3.out', onUpdate: () => { n.textContent = Math.round(o.v); } }, t + 1);
+  }
+  if (calVisits > 1) tl.timeScale(1.7);
+}
+
+// Carta final escrita a mano, con la pluma siguiendo el trazo
+let letterTL = null;
+function buildLetter(resumeAt = 0) {
+  if (letterTL) letterTL.kill();
+  const c = CONFIG.carta, L = $('#letter'), texts = [c.titulo, ...c.parrafos, c.firma];
+  L.innerHTML = `<div class="sr">${texts.map(t => `<p>${t}</p>`).join('')}</div>` +
+    texts.map((_, i) => `<div class="hw-b ${i === 0 ? 'hw-t' : i === texts.length - 1 ? 'hw-s' : 'hw-p'}"></div>`).join('') +
+    `<p class="again-row"><button class="btn" id="again">Escuchar otra vez</button></p>` +
+    (reduce ? '' : '<p class="skip">toca la carta para adelantar</p>');
+  const blocks = [...L.querySelectorAll('.hw-b')], fs = Math.min(9.6, Math.max(7.4, blocks[1].clientWidth / 42));
+  const hws = blocks.map((el, i) => handwrite(el, texts[i],
+    i === 0 ? { size: fs * 1.6, color: '#B8322A', stroke: 2, align: 'center', gap: 1 }
+    : i === blocks.length - 1 ? { size: fs * 1.25, color: '#B8322A', stroke: 1.7, align: 'right' }
+    : { size: fs, color: '#3A2027', stroke: 1.35, gap: 1.12 }));
+  const follow = el => (li, y) => {
+    const target = el.offsetTop + y - L.clientHeight * .5;
+    if (target > L.scrollTop + 4) gsap.to(L, { scrollTop: target, duration: .9, ease: 'power2.inOut', overwrite: 'auto' });
+  };
+  const tl = gsap.timeline({ paused: true });
+  hws.forEach((h, i) => tl.add(hwTimeline(h, { speed: 520, nib: penNib, onLine: follow(blocks[i]) }), i ? '+=.4' : 0));
+  tl.call(hideNibs).to(L.querySelector('.again-row'), { opacity: 1, duration: .8 }, '+=.2');
+  const skip = L.querySelector('.skip');
+  if (skip) tl.to(skip, { opacity: 0, duration: .4 }, '<');
+  tl.timeScale(Math.max(.5, tl.duration() / (c.duracion || 45)));
+  letterTL = tl;
+  if (resumeAt) tl.progress(resumeAt);
+  return tl;
+}
+function playLetter() {
+  const L = $('#letter'), tl = scTL();
+  buildLetter(); L.scrollTop = 0;
+  if (reduce) { gsap.set(L, { opacity: 1 }); letterTL.progress(1); return; }
+  tl.fromTo(L, { opacity: 0, y: innerHeight * .35, rotationX: 75, rotation: -6, transformPerspective: 1000, transformOrigin: '50% 100%' },
+    { opacity: 1, y: 0, rotationX: 0, rotation: -1, duration: 1.8, ease: 'expo.out' }, .2)
+    .call(() => letterTL && letterTL.play(), null, 1.5);
+}
+$('#letter').addEventListener('click', e => {
+  if (e.target.closest('#again') || !letterTL || letterTL.progress() === 1 || letterTL._fast) return;
+  letterTL._fast = true; letterTL.timeScale(letterTL.timeScale() * 7);
+});
+let rzT = 0;
+addEventListener('resize', () => {
+  clearTimeout(rzT);
+  rzT = setTimeout(() => {
+    if (scene !== 'finale' || !letterTL) return;
+    const p = letterTL.progress(), fast = letterTL._fast, t = buildLetter(p);
+    if (fast) { t._fast = true; t.timeScale(t.timeScale() * 7); }
+    if (p > 0 && p < 1) t.play();
+  }, 300);
+});
+
+const sceneTimers = [];
+const later = (fn, ms) => sceneTimers.push(setTimeout(fn, ms));
+
+
+// Otoño: ella salta al montón de hojas y vuelve a salir
+function bump(el) { el.classList.remove('boom'); void el.offsetWidth; el.classList.add('boom'); }
+function leapIntoPile() {
+  if (reduce) return;
+  const g = $('#girlFig'), p = $('#pile');
+  g.classList.remove('leap'); void g.offsetWidth;
+  later(() => {
+    g.classList.add('leap');
+    later(() => { popLeaves(46, 1); bump(p); }, 1280);
+    later(() => { popLeaves(18, .6); bump(p); }, 3170);
+  }, 600);
+}
+
+function setScene(s) {
+  if (s === scene) return;
+  sceneTimers.splice(0).forEach(clearTimeout);
+  if (sceneTL) { sceneTL.kill(); sceneTL = null; }
+  if (s !== 'finale' && letterTL) { letterTL.kill(); letterTL = null; }
+  hideNibs(); gsap.set('.flash', { opacity: 0 });
+  wishStar = null;
+  const prev = scene;
+  scene = s; body.dataset.scene = s;
+  if (!reduce && prev !== 'gate') sweepLight();
+  document.querySelectorAll('.sc').forEach(el => {
+    const on = el.dataset.s === s;
+    if (!on && el.classList.contains('on')) { el.classList.add('leaving'); setTimeout(() => el.classList.remove('leaving'), 1900); }
+    if (on) el.classList.remove('leaving');
+    el.classList.toggle('on', on);
+  });
+  if (s === 'fall') {
+    if (!reduce) { const w = $('#swoop'); w.classList.remove('go'); void w.offsetWidth; w.classList.add('go'); }
+    leapIntoPile();
+  }
+  if (s === 'intro') playIntro();
+  if (s === 'view') playPolaroid();
+  if (s === 'october') playCalendar();
+  if (s === 'finale') playLetter();
+  if (s === 'stars') { setMask(1); wishEl.classList.remove('done'); later(launchWish, 1700); }
+  if (s === 'girl') later(() => burstHearts($('.arch'), 22), 900);
+}
+
+let cur = -2, fallbackStep = -1;
+function onLine(i) {
+  if (i < 0) { showLine(''); setScene('intro'); return; }
+  const L = lines[i];
+  showLine(L.text, L.t, lines[i + 1]?.t);
+  if (!L.text) return;
+  setScene(sceneFor(L.text, scene));
+}
+
+// Si no hay letra cargada, las escenas avanzan solas
+const FALLBACK = ['view', 'october', 'fall', 'stars', 'girl', 'world'];
+function fallbackScenes(t) {
+  if (t < 17) return setScene('intro');
+  const k = Math.floor((t - 17) / 7) % FALLBACK.length;
+  if (k !== fallbackStep) { fallbackStep = k; setScene(FALLBACK[k]); }
+}
+
+/* ---------- Bucle principal ---------- */
+let started = false, last = performance.now();
+function tick(ms) {
+  const dt = Math.min(.05, (ms - last) / 1000); last = ms; clock += dt;
+  if (started && scene !== 'finale') {
+    const t = audio.currentTime + CONFIG.desfase;
+    if (lines.length) {
+      let i = -1; for (let k = 0; k < lines.length && t >= lines[k].t; k++) i = k;
+      if (i !== cur) { cur = i; onLine(i); }
+      karaoke(t);
+    } else fallbackScenes(t);
+    if (audio.duration) $('#prog').style.width = (audio.currentTime / audio.duration * 100) + '%';
+  }
+  drawSky(dt); drawFx(dt);
+  if (scene === 'girl') orbitGirl(dt);
+  if (scene === 'world') orbitWorld(dt);
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* ---------- Carga de archivos ---------- */
+const pick = $('#pick');
+function needFiles(msg, song, lrc) {
+  pick.hidden = false; $('#pickMsg').textContent = msg;
+  $('#pickSong').hidden = !song; $('#pickLrc').hidden = !lrc;
+}
+audio.src = CONFIG.cancion;
+audio.addEventListener('error', () => needFiles(`No encuentro "${CONFIG.cancion}" junto a esta página. Elige el archivo de la canción:`, true, !lines.length));
+fetch(CONFIG.letra).then(r => { if (!r.ok) throw 0; return r.text(); })
+  .then(t => { lines = parseLRC(t); })
+  .catch(() => needFiles(`No pude leer "${CONFIG.letra}". Si abriste la página directo desde la carpeta, elige el .lrc aquí (subida a tu hosting carga sola):`, !!audio.error, true));
+$('#songFile').addEventListener('change', e => { const f = e.target.files[0]; if (f) { audio.src = URL.createObjectURL(f); $('#pickSong').hidden = true; } });
+$('#lrcFile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const parsed = parseLRC(await f.text());
+  if (!parsed.length) { $('#pickMsg').textContent = `"${f.name}" no parece un archivo .lrc con tiempos. Elige el correcto:`; e.target.value = ''; return; }
+  lines = parsed; cur = -2; $('#pickLrc').hidden = true;
+  if ($('#pickSong').hidden) pick.hidden = true;
+});
+
+/* ---------- Controles ---------- */
+const ICON_PAUSE = '<svg viewBox="0 0 16 16"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg>';
+const ICON_PLAY = '<svg viewBox="0 0 16 16"><path d="M4 2 L14 8 L4 14 Z"/></svg>';
+const pp = $('#pp'); pp.innerHTML = ICON_PAUSE;
+function syncPP() { pp.innerHTML = audio.paused ? ICON_PLAY : ICON_PAUSE; pp.setAttribute('aria-label', audio.paused ? 'Reproducir' : 'Pausar'); }
+audio.addEventListener('play', syncPP); audio.addEventListener('pause', syncPP);
+const toggle = () => audio.paused ? audio.play() : audio.pause();
+pp.addEventListener('click', toggle);
+addEventListener('keydown', e => { if (e.code === 'Space' && started) { e.preventDefault(); toggle(); } });
+
+$('#startBtn').addEventListener('click', () => {
+  if (typeof DeviceOrientationEvent !== 'undefined' && DeviceOrientationEvent.requestPermission) DeviceOrientationEvent.requestPermission().catch(() => {});
+  fadeIn();
+  audio.play().then(() => {
+    $('#startBtn').classList.add('fly');
+    started = true; body.classList.add('started'); setScene('intro');
+  }).catch(() => needFiles('No se pudo reproducir la canción. Elige el archivo de audio:', true, !lines.length));
+});
+function fadeIn() {
+  audio.volume = 0; const t0 = performance.now();
+  (function step(n) { const k = Math.min(1, (n - t0) / 2500); audio.volume = k * k; if (k < 1) requestAnimationFrame(step); })(t0);
+}
+audio.addEventListener('ended', () => { setScene('finale'); showLine(''); });
+document.addEventListener('click', e => {
+  if (e.target.id !== 'again') return;
+  cur = -2; fallbackStep = -1; audio.currentTime = 0; setScene('intro'); fadeIn(); audio.play();
+});
+
+/* ---------- Parallax con el mouse o el dedo ---------- */
+let tx = 0, ty = 0, px = 0, py = 0;
+const clamp1 = v => Math.max(-1, Math.min(1, v));
+addEventListener('pointermove', e => { tx = e.clientX / W * 2 - 1; ty = e.clientY / H * 2 - 1; });
+addEventListener('deviceorientation', e => {
+  if (e.gamma == null) return;
+  tx = clamp1(e.gamma / 25); ty = clamp1((e.beta - 45) / 25);
+});
+(function ease() {
+  px += (tx - px) * .06; py += (ty - py) * .06;
+  const r = document.documentElement.style;
+  r.setProperty('--px', px.toFixed(3)); r.setProperty('--py', py.toFixed(3));
+  requestAnimationFrame(ease);
+})();
+</script>
+</body>
+</html>
